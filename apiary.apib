@@ -1,0 +1,158 @@
+FORMAT: 1A
+HOST: http://localhost/
+
+# babe-user-ms
+
+This document outlines the design and architecture of the new user service.  The user service is a component in BaBe service oriented architecture stack.  It encapsulates and provides a suite of service endpoints to allow other components or services to query and update BaBe user data.  
+ 
+# Group Device Login
+
+### Android User Login [POST /user/login/android{?advId,deviceId}]
+
+Add new user (with no userId known before) into database. If the advId (advertising ID) match to one of the `:AndroidUser` in the database, then return the uid (userID) of the `:CommonUser` connected to the matched `:AndroidUser` otherwise create new `:CommonUser`, generate new uid, add new node `:AndroidUser` filled with Data Params then return newly created uid.
+
++ Parameters
+    + advId (string) - Google Advertising ID.
+    + deviceId (string) - Android device ID
+
++ Response 200 (application/json)
+    + Attributes (DeviceLoginResponse)
+        
++ Response 400 (application/json)
+    Return when parameters requirement not met correctly
+    
+    + Attributes (DefaultError400)
+        
++ Response 503 (application/json)
+    Return when server has internal error and can't continue fulfilling the request
+
+    + Attributes (DefaultError503)
+
+### IOS User Login [POST /user/login/ios{?advId,deviceId}]
+
+Add new user (with no userId known before) into database. If the idfa(Identifier for Advertiser) match to one of the `:IosUser` in the database, then return the uid (userID) of the `:CommonUser` connected to the matched `:IosUser` otherwise create new `:CommonUser`, generate new uid, add new node `:IosUser` filled with Data Params then return newly created uid.
+
++ Parameters
+    + idfa (string) - Identifier for Advertiser.
+    + deviceId (string) - IOS device ID
+
++ Response 200 (application/json)
+    + Attributes (DeviceLoginResponse)
+        
++ Response 400 (application/json)
+    Return when parameters requirement not met correctly
+    
+    + Attributes (DefaultError400)
+    
++ Response 503 (application/json)
+    Return when server has internal error and can't continue fulfilling the request
+
+    + Attributes (DefaultError503)
+            
+### Web User Login [POST /user/web/ios{?advId,deviceId}]
+
+Add new user (with no userId known before) into database. If the gcmId (Google Cloud Messaging ID) match to one of the `:WebUser` in the database, then return the uid (userID) of the `:CommonUser` connected to the matched `:WebUser` otherwise create new `:CommonUser`, generate new uid, add new node `:WebUser` filled with Data Params then return newly created uid.
+
++ Parameters
+    + gcmid (string) - Google Cloud Messaging ID.
+    + deviceId (string) - Web device ID
+
++ Response 200 (application/json)
+    + Attributes (DeviceLoginResponse)
+        
++ Response 400 (application/json)
+    Return when parameters requirement not met correctly
+    
+    + Attributes (DefaultError400)
+        
++ Response 503 (application/json)
+    Return when server has internal error and can't continue fulfilling the request
+
+    + Attributes (DefaultError503)
+            
+# Group Social Media Authorization
+
+### FB Login [POST /user/auth/fb{?uid,name,babeToken,date,fbId,fbToken,advId,gcmId,idfa,apnsToken,fbEmail,userAvatar}]
+
+Authenticate a user with client generated token key (shared secret) and user FB credentials to the DB. First generate the token using shared secret by : 
+```
+md5(strrev(sharedSecret + userId) + fbEmail + date)
+```
+Match the babeToken in HTTP param, if unmatch then return HTTP 401.
+First find `:CommonUser` or `:FBUser` in DB by querying using these precedence: 
+```
+fbEmail > fbId > uid > advId > idfa > gcmId
+```
+If the user is found, then update:
++ :CommonUser.name
++ :CommonUser.token
++ :CommonUser.userAvatar (opt)
++ :CommonUser.updated
++ :AUTH_BY.lastLogin
++ :FBUser.email (opt)
++ :FBUser.fbId
++ :FBUser.fbToken
+
+If the user is not found then create new `:CommonUser` with relationship to new `:FBUser` and also relationship to either `:AndroidUser`, `:IOSUser` or `:WebUser` based on the HTTP param which is present (advId, idfa, gcmId).
+Either way, put these key-value into redis (Cache per dimension):
+
+- "x-token"
+- "x-dimens-basic-id"
+- "x-dimens-full-id"
+- "x-dimens-ios-id"
+- "x-dimens-droid-id"
+- "x-dimens-web-id"
+- "x-dimens-fb-id"
+- "x-dimens-gp-id"
+- "x-dimens-basicdemographic-id"
+- "x-dimens-location-id"
+- "x-dimens-interests-id"
+- "x-dimens-occupation-id"
+- "x-dimens-education-id"
+
+Also put pair of uid & fbToken into MQ queue : `fb_demographic`.
+Return the predefined user model as response.
+
++ Parameters
+    + uid (string) - Google Cloud Messaging ID.
+    + name (string) - Web device ID
+    + babeToken (string) - BABE Generated Token
+    + date (string) - Date formatted as (YYYY-MM-dd HH:mm:ss)
+    + fbId (string) - Facebook User ID
+    + fbToken (string) - Facebook Token
+    + advId (string, optional) - Google Advertiser ID
+    + gcmId (string, optional) - Android Google Cloud Messaging ID
+    + idfa (string, optional) - Apple's Identification for Advertiser
+    + apnsToken (string, optional) - Apple Push Notification Service Token
+    + fbEmail (string, optional) - FB Email
+    + userAvatar (string, optional) - User Avatar Image URL
+
++ Response 200 (application/json)
+    + Attributes (DeviceLoginResponse)
+        
++ Response 400 (application/json)
+    Return when parameters requirement not met correctly
+    
+    + Attributes (DefaultError400)
+        
++ Response 503 (application/json)
+    Return when server has internal error and can't continue fulfilling the request
+
+    + Attributes (DefaultError503)
+
+# Data Structures
+
+## DeviceLoginResponse (object)
++ uid: 123 (number) - Babe User ID
+
+## Error (object)
++ errCode (number) - Error Code
++ errMsg (string) - Error Message
+
+## DefaultError400 (Error)
++ errCode: `-1`
++ errMsg: Invalid Request
+
+## DefaultError503 (Error)
++ errCode: `-10`
++ errMsg: Backend service is down
