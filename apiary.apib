@@ -3,7 +3,11 @@ HOST: http://localhost/v1/
 
 # babe-user-ms
 
-This document outlines the design and architecture of the new user service.  The user service is a component in BaBe service oriented architecture stack.  It encapsulates and provides a suite of service endpoints to allow other components or services to query and update BaBe user data.  
+This document outlines the design and architecture of the new user service. 
+
+The user service is a component in BaBe service oriented architecture stack.  
+
+It encapsulates and provides a suite of service endpoints to allow other components or services to query and update BaBe user data.  
  
 # Group Login & Authentication
 
@@ -876,8 +880,6 @@ Otherwise return HTTP 204 with no content upon success.
 
     + Attributes (DefaultError503)
     
-    
-    
 
 ## User Categories [/user/cat/{uid}/{icu}] 
 
@@ -895,6 +897,35 @@ Get the user’s prefered categories by ICU.
     + Body
             
             [1, 2, 5, 7, 15]
+
++ Response 400 (application/json)
+    Return when parameters requirement not met correctly
+    
+    + Attributes (DefaultError400)
+    
++ Response 404 (application/json)
+    Return when user id or ICU is not found
+    
+    + Attributes (DefaultError404)
+        
++ Response 503 (application/json)
+    Return when server has internal error and can't continue fulfilling the request
+
+    + Attributes (DefaultError503)
+    
+### Update User Categories by ICU [PUT]
+
+Update user’s category list, by removing all old relationships and add all new categories based on icu, eg: “id-id” will only affect all relationship to category which icu is “id-id”.
+ 
++ Parameters
+    + uid: 123 (number, required) - User ID
+    + icu: `id-id` (string, required) - locale ID
+
++ Request (application/json)
+    + Attributes
+        + categories: 1, 3, 5, 12 (array[number]) - Categories Indices
+
++ Response 204 (application/json)
 
 + Response 400 (application/json)
     Return when parameters requirement not met correctly
