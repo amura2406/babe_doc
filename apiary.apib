@@ -881,7 +881,7 @@ Otherwise return HTTP 204 with no content upon success.
     + Attributes (DefaultError503)
     
 
-## User Categories [/user/cat/{uid}/{icu}] 
+## User Prefered Categories [/user/cat/{uid}/{icu}] 
 
 ### Get User Categories by ICU [GET]
 
@@ -996,6 +996,35 @@ Unban specific user id.
     
 + Response 404 (application/json)
     Return when user id is not found
+    
+    + Attributes (DefaultError404)
+        
++ Response 503 (application/json)
+    Return when server has internal error and can't continue fulfilling the request
+
+    + Attributes (DefaultError503)
+
+## User Interests [/user/interest/{uid}]
+
+### Update User Interest [PUT]
+
+Update user’s interest list along with interest category for each of interest, by removing all old relationships and add all new interests.
+
++ Parameters
+    + uid: 123 (number, required) - User ID
+
++ Request (application/json)
+    + Attributes (array[UserInterestRequest])
+
++ Response 204 (application/json)
+
++ Response 400 (application/json)
+    Return when parameters requirement not met correctly
+    
+    + Attributes (DefaultError400)
+    
++ Response 404 (application/json)
+    Return when user id or ICU is not found
     
     + Attributes (DefaultError404)
         
@@ -1447,9 +1476,13 @@ See success response example, it’s already in the same order as mentioned abov
 + Include BasicFBModel
 + Include BasicGPlusModel
 
+## UserInterestRequest (onject)
++ category: Music, Games (string, required)
++ interests (array[UserInterestModel])
+
 ## UserInterestModel (object)
 + name: Katty Perry (string) - Name of interest
-+ weight: `1.0` (number) - Weight of interest
++ weight: `1.0` (number, optional) - Weight of interest
 
 ## UserPlusAndFBModel (BasicPlusUserModel)
 + fbUser (SharedFBModel)
