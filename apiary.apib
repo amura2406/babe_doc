@@ -981,6 +981,69 @@ Update user’s age group by giving min age group & max age group.
     Return when server has internal error and can't continue fulfilling the request
 
     + Attributes (DefaultError503)
+    
+### Update Work Employer [PUT /user/demographic/occupation/employer]
+
+Update user’s employer.
+
++ Request (application/json)
+    + Attributes
+        + uid: 123 (number, required) - Babe User ID.
+        + employer: PT Angin Ribut (number, required) - Name of the employer
+       
++ Response 204
+
++ Response 404 (application/json)
+    Return when user id is not found
+    
+    + Attributes (DefaultError404)
+        
++ Response 503 (application/json)
+    Return when server has internal error and can't continue fulfilling the request
+
+    + Attributes (DefaultError503)
+    
+### Update Work Position [PUT /user/demographic/occupation/position]
+
+Update user’s job position.
+
++ Request (application/json)
+    + Attributes
+        + uid: 123 (number, required) - Babe User ID.
+        + position: General Manager (string, required) - Name of the jop position
+       
++ Response 204
+
++ Response 404 (application/json)
+    Return when user id is not found
+    
+    + Attributes (DefaultError404)
+        
++ Response 503 (application/json)
+    Return when server has internal error and can't continue fulfilling the request
+
+    + Attributes (DefaultError503)
+   
+### Update Work Location [PUT /user/demographic/occupation/location]
+
+Update user’s work location.
+
++ Request (application/json)
+    + Attributes
+        + uid: 123 (number, required) - Babe User ID.
+        + location: Jakarta (string, required) - Location name
+       
++ Response 204
+
++ Response 404 (application/json)
+    Return when user id is not found
+    
+    + Attributes (DefaultError404)
+        
++ Response 503 (application/json)
+    Return when server has internal error and can't continue fulfilling the request
+
+    + Attributes (DefaultError503)
 
 # Group Admin Control
 
