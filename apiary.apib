@@ -268,60 +268,402 @@ Refer to table below of supported user's dimension
     
 + Request (application/json)
     + Attributes
-        + dimension (array[enum[string]], optional)
-        
-            The User's Dimension
-            
-            + Members
-                + basic - Default, always implicitly included
-                + full - Extended user's information
-                + iosuser
-                + androiduser
-                + webuser
-                + fbuser
-                + googleuser
-                + interest
-                + interestcategory
-                + basicdemographic
-                + education
-                + occupation
-                + location
+        + dimension: basic (array[string], optional)
+                
+            The User's Dimension, value should be one or more dimension defined below:
+            - basic - Default, always implicitly included
+            - full - Extended user's information
+            - iosuser
+            - androiduser
+            - webuser
+            - fbuser
+            - googleuser
+            - interest
+            - interestcategory
+            - basicdemographic
+            - education
+            - occupation
+            - location
 
 + Response 200 (application/json)    
     + Attributes (BasicPlusUserModel)
     
-+ Request Dimension is `full`
++ Request (application/json) 
+    Dimension is `full`
     + Attributes
-        + dimension: ["full"]
+        + dimension: full
 
 + Response 200 (application/json)
     + Attributes (ExtendedUserModel)
     
-+ Request Dimension is `fbuser`
++ Request (application/json)
+    Dimension is `fbuser`
     + Attributes
-        + dimension: ["fbuser"]
+        + dimension: fbuser
         
 + Response 200 (application/json)
-    + Attributes (BasicPlusUserModel)
-        + fbUser (SharedFBModel)
+    + Attributes (UserPlusAndFBModel)
 
-+ Request Dimension is `interest`
++ Request (application/json) 
+    Dimension is `interest`
     + Attributes
-        + dimension: ["interest"]
+        + dimension: interest
         
 + Response 200 (application/json)
-    + Attributes (BasicPlusUserModel)
-        + interest (array[UserInterestModel])
+    + Attributes (UserPlusAndInterestModel)
 
 + Response 400 (application/json)
     Return when parameters requirement not met correctly
     
     + Attributes (DefaultError400)
+    
++ Response 404 (application/json)
+    Return when user id is not found
+    
+    + Attributes (DefaultError404)
         
 + Response 503 (application/json)
     Return when server has internal error and can't continue fulfilling the request
 
     + Attributes (DefaultError503)
+    
+### Get Predefined User Model [GET /user/pre/{uid}]
+
+Get the predefined user model by looking from uid supplied. 
+Use this precedence to look user for: 
+```
+redis > DB
+```
+If user is not found then return HTTP 404. Otherwise return the predefined model. 
+
++ Parameters
+    + uid: 123 (number) - User ID
+
++ Response 200 (application/json)    
+    + Attributes (ExtendedUserModel)
+
++ Response 400 (application/json)
+    Return when parameters requirement not met correctly
+    
+    + Attributes (DefaultError400)
+    
++ Response 404 (application/json)
+    Return when user id is not found
+    
+    + Attributes (DefaultError404)
+        
++ Response 503 (application/json)
+    Return when server has internal error and can't continue fulfilling the request
+
+    + Attributes (DefaultError503)
+
+### Get User Shared Model by Babe Token [POST /user/bytoken/{babeToken}]
+
+Get the user shared model by looking from babe token supplied.
+Use this precedence to look user for: 
+```
+redis > DB
+```
+If user is not found then return HTTP 404. Otherwise return the shared model. 
+Optionally, other user property can be supplied to add the desired fields other than the standard shared model using dimension data param.
+
+Refer to table below of supported user's dimension
+
+| Dimension            | Append Type     | Properties                        |
+|----------------------|-----------------|-----------------------------------|
+| **basic**            | Default Object  | uid (String)                      |
+|                      |                 | name (String)                     |
+|                      |                 | token (String)                    |
+|                      |                 | userAvatar (String)               |
+|                      |                 | lastSeen (Timestamp)              |
+| **full**             | Flatten         | username (String)                 |
+|                      |                 | created (Timestamp)               |
+|                      |                 | updated (Timestamp)               |
+|                      |                 | enabled (Boolean)                 |
+| **iosuser**          | Array of Object | idfa (String)                     |
+|                      |                 | apnsToken (String)                |
+|                      |                 | deviceId (String)                 |
+| **androiduser**      | Array of Object | advId (String)                    |
+|                      |                 | gcmId (String)                    |
+|                      |                 | deviceId (String)                 |
+| **webuser**          | Array of Object | gcmId (String)                    |
+|                      |                 | deviceId (String)                 |
+| **fbuser**           | Single Object   | email (String)                    |
+|                      |                 | id (String)                       |
+|                      |                 | token (String)                    |
+|                      |                 | lastLogin (Timestamp)             |
+| **googleuser**       | Single Object   | email (String)                    |
+|                      |                 | id (String)                       |
+|                      |                 | token (String)                    |
+|                      |                 | lastLogin (Timestamp)             |
+| **interest**         | Array of Object | name (String)                     |
+|                      |                 | weight (Double)                   |
+| **interestcategory** | Array of Object | name (String)                     |
+|                      |                 | weight (Double)                   |
+| **basicdemographic** | Flatten         | birthday (Timestamp)              |
+|                      |                 | ageGroup (String) = "*min - ?max" |
+|                      |                 | gender (String)                   |
+|                      |                 | religion (String)                 |
+|                      |                 | politic (String)                  |
+| **education**        | Flatten         | school (String)                   |
+|                      |                 | fieldOfStudy (String)             |
+|                      |                 | schoolType (String)               |
+| **occupation**       | Flatten         | employer (String)                 |
+|                      |                 | position (String)                 |
+|                      |                 | location (String)                 |
+| **location**         | Flatten         | hometown (String)                 |
+|                      |                 | country (String)                  |
+|                      |                 | city (String)                     |
+
++ Parameters
+    + babeToken: TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ (string) - Babe Generated Token
+    
++ Request (application/json)
+    + Attributes
+        + dimension: basic (array[string], optional)
+                
+            The User's Dimension, value should be one or more dimension defined below:
+            - basic - Default, always implicitly included
+            - full - Extended user's information
+            - iosuser
+            - androiduser
+            - webuser
+            - fbuser
+            - googleuser
+            - interest
+            - interestcategory
+            - basicdemographic
+            - education
+            - occupation
+            - location
+
++ Response 200 (application/json)    
+    + Attributes (BasicPlusUserModel)
+    
++ Request (application/json)
+    Dimension is `full`
+    + Attributes
+        + dimension: full
+
++ Response 200 (application/json)
+    + Attributes (ExtendedUserModel)
+    
++ Request (application/json)
+    Dimension is `fbuser`
+    + Attributes
+        + dimension: fbuser
+        
++ Response 200 (application/json)
+    + Attributes (UserPlusAndFBModel)
+
++ Request (application/json)
+    Dimension is `interest`
+    + Attributes
+        + dimension: interest
+        
++ Response 200 (application/json)
+    + Attributes (UserPlusAndInterestModel)
+
++ Response 400 (application/json)
+    Return when parameters requirement not met correctly
+    
+    + Attributes (DefaultError400)
+    
++ Response 404 (application/json)
+    Return when token is not found
+    
+    + Attributes (DefaultError404)
+        
++ Response 503 (application/json)
+    Return when server has internal error and can't continue fulfilling the request
+
+    + Attributes (DefaultError503)
+
+### Get Predefined User Model [GET /user/pre/bytoken/{babeToken}]
+
+Get the predefined user model by looking from babe token supplied. 
+Use this precedence to look user for: 
+```
+redis > DB
+```
+If user is not found then return HTTP 404. Otherwise return the predefined model. 
+
++ Parameters
+    + babeToken: TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ (string) - Babe Generated Token
+
++ Response 200 (application/json)    
+    + Attributes (ExtendedUserModel)
+
++ Response 400 (application/json)
+    Return when parameters requirement not met correctly
+    
+    + Attributes (DefaultError400)
+    
++ Response 404 (application/json)
+    Return when token is not found
+    
+    + Attributes (DefaultError404)
+        
++ Response 503 (application/json)
+    Return when server has internal error and can't continue fulfilling the request
+
+    + Attributes (DefaultError503)
+
+### Multi Get User Shared Model [POST /user/mget]
+
+Get an array of user shared model by looking from array of uid supplied. 
+Use this precedence to look user for: 
+```
+redis > DB
+```
+If no user found at all then return HTTP 404. Otherwise return partial or full user shared model. 
+Optionally, other user property can be supplied to add the desired fields other than the standard shared model using dimension data param.
+
+Refer to table below of supported user's dimension
+
+| Dimension            | Append Type     | Properties                        |
+|----------------------|-----------------|-----------------------------------|
+| **basic**            | Default Object  | uid (String)                      |
+|                      |                 | name (String)                     |
+|                      |                 | token (String)                    |
+|                      |                 | userAvatar (String)               |
+|                      |                 | lastSeen (Timestamp)              |
+| **full**             | Flatten         | username (String)                 |
+|                      |                 | created (Timestamp)               |
+|                      |                 | updated (Timestamp)               |
+|                      |                 | enabled (Boolean)                 |
+| **iosuser**          | Array of Object | idfa (String)                     |
+|                      |                 | apnsToken (String)                |
+|                      |                 | deviceId (String)                 |
+| **androiduser**      | Array of Object | advId (String)                    |
+|                      |                 | gcmId (String)                    |
+|                      |                 | deviceId (String)                 |
+| **webuser**          | Array of Object | gcmId (String)                    |
+|                      |                 | deviceId (String)                 |
+| **fbuser**           | Single Object   | email (String)                    |
+|                      |                 | id (String)                       |
+|                      |                 | token (String)                    |
+|                      |                 | lastLogin (Timestamp)             |
+| **googleuser**       | Single Object   | email (String)                    |
+|                      |                 | id (String)                       |
+|                      |                 | token (String)                    |
+|                      |                 | lastLogin (Timestamp)             |
+| **interest**         | Array of Object | name (String)                     |
+|                      |                 | weight (Double)                   |
+| **interestcategory** | Array of Object | name (String)                     |
+|                      |                 | weight (Double)                   |
+| **basicdemographic** | Flatten         | birthday (Timestamp)              |
+|                      |                 | ageGroup (String) = "*min - ?max" |
+|                      |                 | gender (String)                   |
+|                      |                 | religion (String)                 |
+|                      |                 | politic (String)                  |
+| **education**        | Flatten         | school (String)                   |
+|                      |                 | fieldOfStudy (String)             |
+|                      |                 | schoolType (String)               |
+| **occupation**       | Flatten         | employer (String)                 |
+|                      |                 | position (String)                 |
+|                      |                 | location (String)                 |
+| **location**         | Flatten         | hometown (String)                 |
+|                      |                 | country (String)                  |
+|                      |                 | city (String)                     |
+    
++ Request (application/json)
+    + Attributes
+        + uids: 123, 567, 999 (array[number], required) - User Indices
+        + dimension: basic (array[string], optional)
+        
+            The User's Dimension, value should be one or more dimension defined below:
+            - basic - Default, always implicitly included
+            - full - Extended user's information
+            - iosuser
+            - androiduser
+            - webuser
+            - fbuser
+            - googleuser
+            - interest
+            - interestcategory
+            - basicdemographic
+            - education
+            - occupation
+            - location
+
++ Response 200 (application/json)    
+    + Attributes (array[BasicPlusUserModel])
+    
++ Request (application/json)
+    Dimension is `full`
+    + Attributes
+        + dimension: full
+
++ Response 200 (application/json)
+    + Attributes (array[ExtendedUserModel])
+    
++ Request (application/json)
+    Dimension is `fbuser`
+    + Attributes
+        + dimension: fbuser
+        
++ Response 200 (application/json)
+    + Attributes (array[UserPlusAndFBModel])
+
++ Request (application/json)
+    Dimension is `interest`
+    + Attributes
+        + dimension: interest
+        
++ Response 200 (application/json)
+    + Attributes (array[UserPlusAndInterestModel])
+
++ Response 400 (application/json)
+    Return when parameters requirement not met correctly
+    
+    + Attributes (DefaultError400)
+    
++ Response 404 (application/json)
+    Return when NO user id is found
+    
+    + Attributes (DefaultError404)
+        
++ Response 503 (application/json)
+    Return when server has internal error and can't continue fulfilling the request
+
+    + Attributes (DefaultError503)
+
+### Multi Get Predefined User Model [POST /user/mget/pre]
+
+Get an array of predefined user model by looking from array of uid supplied. 
+Use this precedence to look user for: 
+```
+redis > DB
+```
+If no user found at all then return HTTP 404. Otherwise return partial or full user shared model. 
+
++ Request (application/json)
+    + Attributes
+        + uids: 123, 567, 999 (array[number], required) - User Indices
+
++ Response 200 (application/json)    
+    + Attributes (array[UserPredefinedModel])
+
++ Response 400 (application/json)
+    Return when parameters requirement not met correctly
+    
+    + Attributes (DefaultError400)
+    
++ Response 404 (application/json)
+    Return when NO user id is found
+    
+    + Attributes (DefaultError404)
+        
++ Response 503 (application/json)
+    Return when server has internal error and can't continue fulfilling the request
+
+    + Attributes (DefaultError503)
+
+
+
+
+
 
 # Data Structures
 
@@ -401,6 +743,12 @@ Refer to table below of supported user's dimension
 + name: Katty Perry (string) - Name of interest
 + weight: `1.0` (number) - Weight of interest
 
+## UserPlusAndFBModel (BasicPlusUserModel)
++ fbUser (SharedFBModel)
+
+## UserPlusAndInterestModel (BasicPlusUserModel)
++ interest (array[UserInterestModel])
+
 ## Error (object)
 + errCode (number) - Error Code
 + errMsg (string) - Error Message
@@ -412,6 +760,10 @@ Refer to table below of supported user's dimension
 ## DefaultError401 (Error)
 + errCode: `-2`
 + errMsg: Authorization needed to access resource
+
+## DefaultError404 (Error)
++ errCode: `-5`
++ errMsg: Resource not found
 
 ## DefaultError503 (Error)
 + errCode: `-10`
