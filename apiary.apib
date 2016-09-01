@@ -911,7 +911,7 @@ Get the user’s prefered categories by ICU.
 
     + Attributes (DefaultError503)
 
-## Banned Status [/user/isbanned/{uid}]
+## Banned Status [/user/ban/{uid}]
 
 ### Check User's Banned Status [GET]
 
@@ -924,6 +924,44 @@ Get boolean indicating a certain user id is banned or not.
     + Attributes (object)
         + uid: 123 (number) - User ID
         + banned: true (boolean) - Banned Status
+    
++ Response 404 (application/json)
+    Return when user id is not found
+    
+    + Attributes (DefaultError404)
+        
++ Response 503 (application/json)
+    Return when server has internal error and can't continue fulfilling the request
+
+    + Attributes (DefaultError503)
+
+## Ban [PUT]
+
+Ban specific user id.
+
++ Parameters
+    + uid: 123 (number, required) - Babe User ID.
+    
++ Response 204
+    
++ Response 404 (application/json)
+    Return when user id is not found
+    
+    + Attributes (DefaultError404)
+        
++ Response 503 (application/json)
+    Return when server has internal error and can't continue fulfilling the request
+
+    + Attributes (DefaultError503)
+    
+## Unban [DELETE]
+
+Unban specific user id.
+
++ Parameters
+    + uid: 123 (number, required) - Babe User ID.
+    
++ Response 204
     
 + Response 404 (application/json)
     Return when user id is not found
