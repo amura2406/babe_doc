@@ -935,6 +935,53 @@ Get boolean indicating a certain user id is banned or not.
 
     + Attributes (DefaultError503)
 
+# Demographic
+
+## Basic Demographic [/user/demographic]
+
+### Update Birthday [PUT /user/demographic/birthday]
+
+Update user’s birthday.
+
++ Request (application/json)
+    + Attributes
+        + uid: 123 (number) - Babe User ID.
+        + birthday: 567993600 (number) - User's birthday
+       
++ Response 204
+
++ Response 404 (application/json)
+    Return when user id is not found
+    
+    + Attributes (DefaultError404)
+        
++ Response 503 (application/json)
+    Return when server has internal error and can't continue fulfilling the request
+
+    + Attributes (DefaultError503)
+
+### Update Age Group [PUT /user/demographic/agegroup]
+
+Update user’s age group by giving min age group & max age group.
+
++ Request (application/json)
+    + Attributes
+        + uid: 123 (number, required) - Babe User ID.
+        + min: 18 (number, required) - Min Age Range
+        + max: 24 (number) - Max Age Range
+       
++ Response 204
+
++ Response 404 (application/json)
+    Return when user id is not found
+    
+    + Attributes (DefaultError404)
+        
++ Response 503 (application/json)
+    Return when server has internal error and can't continue fulfilling the request
+
+    + Attributes (DefaultError503)
+
 # Group Admin Control
 
 ## Cache Management [/cache/prewarm]
@@ -1012,7 +1059,7 @@ See success response example, it’s already in the same order as mentioned abov
 + uid: 123 (number) - Babe User ID
 
 ## BasicUserModel (object)
-+ uid: 123 (string) - Babe User ID.
++ uid: 123 (number) - Babe User ID.
 + name: Angga Muhammad (string) - Web device ID
 + babeToken: TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ (string) - BABE Generated Token
 + userAvatar: http://cdn.babe.news/images/123.jpg (string) - User Avatar Image URL
