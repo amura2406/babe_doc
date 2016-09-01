@@ -81,6 +81,7 @@ Authenticate a user with client generated token key (shared secret) and user FB 
 md5(strrev(sharedSecret + userId) + fbEmail + date)
 ```
 Match the babeToken in HTTP param, if unmatch then return HTTP 401.
+
 First find `:CommonUser` or `:FBUser` in DB by querying using these precedence: 
 ```
 fbEmail > fbId > uid > advId > idfa > gcmId
@@ -96,6 +97,7 @@ If the user is found, then update:
 + *:FBUser.fbToken*
 
 If the user is not found then create new `:CommonUser` with relationship to new `:FBUser` and also relationship to either `:AndroidUser`, `:IOSUser` or `:WebUser` based on the HTTP param which is present (advId, idfa, gcmId).
+
 Either way, put these key-value into redis *(Cache per dimension)*:
 
 | Redis Key                            | TTL    | Desc                                         |
@@ -115,6 +117,7 @@ Either way, put these key-value into redis *(Cache per dimension)*:
 | `x-dimens-education-id:{uid}`        | 30 day | JSON Formatted User's Education Object       |
 
 Also put pair of uid & fbToken into MQ queue : `fb_demographic`.
+
 Return the predefined user model as response.
 
 + Request (application/json)
@@ -145,6 +148,7 @@ Authenticate a user with client generated token key (shared secret) and user Goo
 md5(strrev(sharedSecret + userId) + gEmail + date)
 ```
 Match the babeToken in HTTP param, if unmatch then return HTTP 401.
+
 First find `:CommonUser` or `:GoogleUser` in DB by querying using these precedence: 
 ```
 gpEmail > gpId > uid > advId > idfa > gcmId
@@ -160,6 +164,7 @@ If the user is found, then update:
 + *:GoogleUser.gToken*
 
 If the user is not found then create new `:CommonUser` with relationship to new `:GoogleUser` and also relationship to either `:AndroidUser`, `:IOSUser` or `:WebUser` based on the HTTP param which is present (advId, idfa, gcmId).
+
 Either way, put these key-value into redis *(Cache per dimension)*:
 
 | Redis Key                            | TTL    | Desc                                         |
@@ -201,18 +206,20 @@ Return the predefined user model as response.
 
     + Attributes (DefaultError503)
 
-# Group User
+# Group Resource User
 
-## User Retrieval [/user/{uid}]
+## Single User Retrieval [/user/{uid}]
 
 ### Get User Shared Model [POST]
 
 Get the user shared model by looking from uid supplied. 
+
 Use this precedence to look user for: 
 ```
 redis > DB
 ```
 If user is not found then return HTTP 404. Otherwise return the shared model. 
+
 Optionally, other user property can be supplied to add the desired fields other than the standard shared model using dimension data param.
 
 Refer to table below of supported user's dimension
@@ -330,6 +337,7 @@ Refer to table below of supported user's dimension
 ### Get Predefined User Model [GET /user/pre/{uid}]
 
 Get the predefined user model by looking from uid supplied. 
+
 Use this precedence to look user for: 
 ```
 redis > DB
@@ -360,11 +368,13 @@ If user is not found then return HTTP 404. Otherwise return the predefined model
 ### Get User Shared Model by Babe Token [POST /user/bytoken/{babeToken}]
 
 Get the user shared model by looking from babe token supplied.
+
 Use this precedence to look user for: 
 ```
 redis > DB
 ```
 If user is not found then return HTTP 404. Otherwise return the shared model. 
+
 Optionally, other user property can be supplied to add the desired fields other than the standard shared model using dimension data param.
 
 Refer to table below of supported user's dimension
@@ -479,9 +489,10 @@ Refer to table below of supported user's dimension
 
     + Attributes (DefaultError503)
 
-### Get Predefined User Model [GET /user/pre/bytoken/{babeToken}]
+### Get Predefined User Model by Babe Token [GET /user/pre/bytoken/{babeToken}]
 
 Get the predefined user model by looking from babe token supplied. 
+
 Use this precedence to look user for: 
 ```
 redis > DB
@@ -509,9 +520,12 @@ If user is not found then return HTTP 404. Otherwise return the predefined model
 
     + Attributes (DefaultError503)
 
-### Multi Get User Shared Model [POST /user/mget]
+## Multiple User Retrieval [/user/mget]
+
+### Multi Get User Shared Model [POST]
 
 Get an array of user shared model by looking from array of uid supplied. 
+
 Use this precedence to look user for: 
 ```
 redis > DB
@@ -632,6 +646,7 @@ Refer to table below of supported user's dimension
 ### Multi Get Predefined User Model [POST /user/mget/pre]
 
 Get an array of predefined user model by looking from array of uid supplied. 
+
 Use this precedence to look user for: 
 ```
 redis > DB
@@ -660,10 +675,115 @@ If no user found at all then return HTTP 404. Otherwise return partial or full u
 
     + Attributes (DefaultError503)
 
+## GCM ID Related [/user/gcmid/lim/{limit}]
 
+### Get Active GCM Indices [GET]
 
+Get an array of all active GCM indices from the beginning of the RID (Record ID) and `limit` the number of record by limit.  
 
+Pagination in orientDB is described [here](http://orientdb.com/docs/2.2/Pagination.html).
 
++ Parameters
+    + limit: 1000 (number, required) - Limit of the number of GCM indices that will be returned
+
++ Response 200 (application/json)
+    + Attributes
+        + page (object)
+            + nextLastId: `1:2001` (string, optional) - The next last ID should be used to request **next** page, can be `null` if there's no more GCM Indices
+            + count: 1000 (number) - number of GCM indices that actually returned
+        + data: `bk3RNwTe3H0:CI2k_HHwgIpoDKCIZvvDMExUdFQ3P1`, `k98RNwTe3H0:CK2k_MNwgIpoDKCIZvvDMExUdFQLG1` (array[string]) - Array of GCM Indices
+
++ Response 400 (application/json)
+    Return when parameters requirement not met correctly
+    
+    + Attributes (DefaultError400)
+        
++ Response 503 (application/json)
+    Return when server has internal error and can't continue fulfilling the request
+
+    + Attributes (DefaultError503)
+
+### Get Active GCM Indices with Pagination [GET /user/gcmid/lim/{limit}/from/{lastId}]
+
+Get an array of all active GCM indices from the `lastId` of the RID (Record ID) and `limit` the number of record by limit. 
+
+Pagination in orientDB is described [here](http://orientdb.com/docs/2.2/Pagination.html).
+
++ Parameters
+    + limit: 1000 (number, required) - Limit of the number of GCM indices that will be returned
+    + lastId: `1:1001` (string, required) - Last GCM ID identifier in the backend storage used as offset
+
++ Response 200 (application/json)
+    + Attributes (GCMPaginationModel)
+
++ Response 400 (application/json)
+    Return when parameters requirement not met correctly
+    
+    + Attributes (DefaultError400)
+        
++ Response 503 (application/json)
+    Return when server has internal error and can't continue fulfilling the request
+
+    + Attributes (DefaultError503)
+
+### GCM Indices From User Indices [POST /user/gcmid/find]
+
+Get all GCM Indices from all user indices to be retrieved.
+
+If `userid` has more than 1 GCM ID, then return only the latest GCM ID by `lastLogin` attribute.
+
+If `userid` has no GCM ID linked to it, then simply **ignore** this specific `userid`.
+
+**IMPORTANT** if, size of requested ids is bigger than 1000 then return HTTP 400 Bad Request.
+
++ Request (application/json)
+    + Attributes
+        + uids : 123, 456, 789 (array[number]) - Array of User Indices which GCM Indices will be retrieved
+
++ Response 200 (application/json)
+    + Attributes (array[UserToGCMModel])
+
++ Response 400 (application/json)
+    Return when parameters requirement not met correctly
+    
+    + Attributes (DefaultError400)
+        
++ Response 503 (application/json)
+    Return when server has internal error and can't continue fulfilling the request
+
+    + Attributes (DefaultError503)
+
+## User Categories [/user/cat/{uid}/{icu}] 
+
+### Get User Categories by ICU [GET]
+
+Get the user’s prefered categories by ICU.
+ 
++ Parameters
+    + uid: 123 (number, required) - User ID
+    + icu: `id-id` (string, required) - locale ID
+
++ Response 200 (application/json)
+    + Attributes (array[number])
+
+    + Body
+            
+            [1, 2, 5, 7, 15]
+
++ Response 400 (application/json)
+    Return when parameters requirement not met correctly
+    
+    + Attributes (DefaultError400)
+    
++ Response 404 (application/json)
+    Return when user id or ICU is not found
+    
+    + Attributes (DefaultError404)
+        
++ Response 503 (application/json)
+    Return when server has internal error and can't continue fulfilling the request
+
+    + Attributes (DefaultError503)
 
 # Data Structures
 
@@ -733,6 +853,16 @@ If no user found at all then return HTTP 404. Otherwise return partial or full u
 + gpEmail: amura@gmail.com (string, required) - Google Plus Email
 + Include BasicAndroidModel
 + Include BasicIOSModel
+
+## GCMPaginationModel (object)
++ page (object)
+    + nextLastId: `1:2001` (string, optional) - The next last ID should be used to request **next** page, can be `null` if there's no more GCM Indices
+    + count: 1000 (number) - number of GCM indices that actually returned
++ data: `bk3RNwTe3H0:CI2k_HHwgIpoDKCIZvvDMExUdFQ3P1`, `k98RNwTe3H0:CK2k_MNwgIpoDKCIZvvDMExUdFQLG1` (array[string]) - Array of GCM Indices
+
+## UserToGCMModel (object)
++ uid: 123 (number) - User ID
++ gcmid: `bk3RNwTe3H0:CI2k_HHwgIpoDKCIZvvDMExUdFQ3P1` (string) - GCM ID
 
 ## UserPredefinedModel (ExtendedUserModel)
 + categories: [1, 3, 9, 21, 55] (array[number]) - User category preference 
