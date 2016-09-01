@@ -208,7 +208,7 @@ Return the predefined user model as response.
 
 # Group Resource User
 
-## Single User Retrieval [/user/{uid}]
+## Single User Operation [/user/{uid}]
 
 ### Get User Shared Model [POST]
 
@@ -329,6 +329,37 @@ Refer to table below of supported user's dimension
     
     + Attributes (DefaultError404)
         
++ Response 503 (application/json)
+    Return when server has internal error and can't continue fulfilling the request
+
+    + Attributes (DefaultError503)
+
+### Update Basic User Information [PATCH]
+
+Update user’s basic profile based on the data param key-value property mapping.
+
+If a single property not found in the mapping, then the request will be omitted. 
+
+Otherwise return HTTP 204 with no content upon success.
+
++ Parameters
+    + uid: 123 (number, required) - User ID
+    
++ Request (application/json)
+    + Attributes (BasicUserUpdateRequest)
+        
++ Response 204
+
++ Response 400 (application/json)
+    Return when parameters requirement not met correctly
+    
+    + Attributes (DefaultError400)
+        
++ Response 404 (application/json)
+    Return when user id is not found
+    
+    + Attributes (DefaultError404)
+
 + Response 503 (application/json)
     Return when server has internal error and can't continue fulfilling the request
 
@@ -753,6 +784,101 @@ If `userid` has no GCM ID linked to it, then simply **ignore** this specific `us
 
     + Attributes (DefaultError503)
 
+### Update GCM ID [PATCH /user/gcmid/{uid}]
+
+Update user’s `:AndroidUser` GCM ID by it's user ID.
+
+If specified user doesn’t have `:AndroidUser` with corresponding `advId`, return HTTP 404 error. 
+
+Otherwise return HTTP 204 with no content upon success.
+
++ Parameters
+    + uid: 123 (number, required) - User ID
+    
++ Request (application/json)
+    + Attributes (BasicAndroidModel)
+        
++ Response 204
+
++ Response 400 (application/json)
+    Return when parameters requirement not met correctly
+    
+    + Attributes (DefaultError400)
+        
++ Response 404 (application/json)
+    Return when NO user id or advId is found
+    
+    + Attributes (DefaultError404)
+
++ Response 503 (application/json)
+    Return when server has internal error and can't continue fulfilling the request
+
+    + Attributes (DefaultError503)
+    
+### Replace GCM ID [PUT /user/gcmid]
+
+Replace user’s `:AndroidUser` GCM ID with the new one.
+
+Return HTTP 204 with no content upon success.
+
++ Request (application/json)
+    + Attributes
+        + oldGcmId: bk3RNwTe3H0:CI2k_HHwgIpoDKCIZvvDMExUdFQ3P1 (string, required) - Old Android Google Cloud Messaging ID
+        + newGcmId: ncrRNwTe3H0_0F82GHHwgIpoDKCIZvvDMExUdFPL1T (string, required) - New Android Google Cloud Messaging ID
+        
++ Response 204
+
++ Response 400 (application/json)
+    Return when parameters requirement not met correctly
+    
+    + Attributes (DefaultError400)
+        
++ Response 404 (application/json)
+    Return when GCM ID is not found
+    
+    + Attributes (DefaultError404)
+
++ Response 503 (application/json)
+    Return when server has internal error and can't continue fulfilling the request
+
+    + Attributes (DefaultError503)
+    
+## APNS Related [/user/apns/{uid}]
+    
+### Update APNS Token [PATCH]
+
+Update user’s `:IOSUser` APNS Token by it's user ID.
+
+If specified user doesn’t have `:IOSUser` with corresponding `idfa`, return HTTP 404 error. 
+
+Otherwise return HTTP 204 with no content upon success.
+
++ Parameters
+    + uid: 123 (number, required) - User ID
+    
++ Request (application/json)
+    + Attributes (BasicIOSModel)
+        
++ Response 204
+
++ Response 400 (application/json)
+    Return when parameters requirement not met correctly
+    
+    + Attributes (DefaultError400)
+        
++ Response 404 (application/json)
+    Return when NO user id or idfa is found
+    
+    + Attributes (DefaultError404)
+
++ Response 503 (application/json)
+    Return when server has internal error and can't continue fulfilling the request
+
+    + Attributes (DefaultError503)
+    
+    
+    
+
 ## User Categories [/user/cat/{uid}/{icu}] 
 
 ### Get User Categories by ICU [GET]
@@ -785,6 +911,101 @@ Get the user’s prefered categories by ICU.
 
     + Attributes (DefaultError503)
 
+## Banned Status [/user/isbanned/{uid}]
+
+### Check User's Banned Status [GET]
+
+Get boolean indicating a certain user id is banned or not.
+
++ Parameters
+    + uid: 123 (number, required) - User ID
+    
++ Response 200 (application/json)
+    + Attributes (object)
+        + uid: 123 (number) - User ID
+        + banned: true (boolean) - Banned Status
+    
++ Response 404 (application/json)
+    Return when user id is not found
+    
+    + Attributes (DefaultError404)
+        
++ Response 503 (application/json)
+    Return when server has internal error and can't continue fulfilling the request
+
+    + Attributes (DefaultError503)
+
+# Group Admin Control
+
+## Cache Management [/cache/prewarm]
+
+### Start-Up [POST /start]
+
+This endpoint basically will create / update `my-new-user-id` key on Redis by 2 ways:
+* Use `forceId` field if exists in the request body.
+* Calculate maximum `userid` in the backend database then update `my-new-user-id` by `max + 1`.
+
+
++ Request (application/json)
+    + Attributes
+        + forceId: 5000000 (number, optional) - number of the autogenerated ID to be set on startup.
+
++ Response 200 (application/json)
+    + Attributes
+        + status: `Running 1/1000 (0-1000)` (string) - Status of the process
+        
++ Response 400 (application/json)
+    Return when parameters requirement not met correctly
+    
+    + Attributes (DefaultError400)
+
++ Response 503 (application/json)
+    Return when server has internal error and can't continue fulfilling the request
+
+    + Attributes (DefaultError503)
+
+### Prewarm Cache [POST]
+
+Pre-warm the redis cache by populating all relevant redis key from certain user range (`startId` to `endId`) to accommodate fast checking on login & get process. 
+
+TTL for every populated keys are the same as when the key is populated on-the-fly as the request need it. 
+
+The process should be done asynchronously using Akka actor and the request should return as soon as possible. 
+
+The returned status should reflect the status of Akka process. 
+
+If request to prewarm cache is received before the previous process finished, then just return the status of current Akka process.
+
+Return HTTP 200 with status of the pre-warm process upon success. It should contains current processing count vs total & the requested start ID and end ID. 
+
+See success response example, it’s already in the same order as mentioned above.
+
++ Request (application/json)
+    + Attributes
+        + startId: 1 (number, required) - The starting user ID to be cached
+        + endId: 500000 (number, required) - The ending user ID to be cached
+
++ Response 200 (application/json)
+    + Attributes
+        + status: `Running 1/1000 (0-1000)` (string) - Status of the process
+        
++ Response 400 (application/json)
+    Return when parameters requirement not met correctly
+    
+    + Attributes (DefaultError400)
+
++ Response 503 (application/json)
+    Return when server has internal error and can't continue fulfilling the request
+
+    + Attributes (DefaultError503)
+
+
+
+
+
+
+
+
 # Data Structures
 
 ## DeviceLoginResponse (object)
@@ -806,6 +1027,16 @@ Get the user’s prefered categories by ICU.
 + birthday: 567993600 (number) - User's birthday
 + created: 1465631405 (number) - When the user created in the system (timestamp)
 + updated: 1465631405 (number) - When the user record is updated (timestamp)
+
+## BasicUserUpdateRequest (object)
++ babeToken: TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ (string) - BABE Generated Token
++ userAvatar: http://cdn.babe.news/images/123.jpg (string) - User Avatar Image URL
++ lastSeen: 1465631405 (number) - Last seen in Babe (timestamp)
++ enabled: true (boolean) - Toggle whether user is active or not
++ fbToken: eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9 (string) - Facebook Token
++ fbEmail: amura@abc.com (string) - FB Email
++ gpToken: eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIikiYWRtaW4iOnRydWV9 (string) - Google Plus Token
++ gpEmail: amura@gmail.com (string) - Google Plus Email
 
 ## BasicAndroidModel (object)
 + advId: 2261ae9f81b (string) - Google Advertiser ID
