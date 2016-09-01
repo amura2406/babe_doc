@@ -982,7 +982,7 @@ Update user’s age group by giving min age group & max age group.
 
     + Attributes (DefaultError503)
     
-### Update Work Employer [PUT /user/demographic/occupation/employer]
+### Update Work Employer [PUT /user/demographic/occ/employer]
 
 Update user’s employer.
 
@@ -1003,7 +1003,7 @@ Update user’s employer.
 
     + Attributes (DefaultError503)
     
-### Update Work Position [PUT /user/demographic/occupation/position]
+### Update Work Position [PUT /user/demographic/occ/position]
 
 Update user’s job position.
 
@@ -1024,7 +1024,7 @@ Update user’s job position.
 
     + Attributes (DefaultError503)
    
-### Update Work Location [PUT /user/demographic/occupation/location]
+### Update Work Location [PUT /user/demographic/occ/location]
 
 Update user’s work location.
 
@@ -1032,6 +1032,174 @@ Update user’s work location.
     + Attributes
         + uid: 123 (number, required) - Babe User ID.
         + location: Jakarta (string, required) - Location name
+       
++ Response 204
+
++ Response 404 (application/json)
+    Return when user id is not found
+    
+    + Attributes (DefaultError404)
+        
++ Response 503 (application/json)
+    Return when server has internal error and can't continue fulfilling the request
+
+    + Attributes (DefaultError503)
+    
+## Update Education School [PUT /user/demographic/edu/school]
+
+Update user’s education school.
+
++ Request (application/json)
+    + Attributes
+        + uid: 123 (number, required) - Babe User ID.
+        + school: ITB (string, required) - School Name.
+       
++ Response 204
+
++ Response 404 (application/json)
+    Return when user id is not found
+    
+    + Attributes (DefaultError404)
+        
++ Response 503 (application/json)
+    Return when server has internal error and can't continue fulfilling the request
+
+    + Attributes (DefaultError503)
+
+## Update Education Field of Study [PUT /user/demographic/edu/fos]
+
+Update user’s education field of study.
+
++ Request (application/json)
+    + Attributes
+        + uid: 123 (number, required) - Babe User ID.
+        + fieldOfStudy: Computer Science (string, required) - Field of Study.
+       
++ Response 204
+
++ Response 404 (application/json)
+    Return when user id is not found
+    
+    + Attributes (DefaultError404)
+        
++ Response 503 (application/json)
+    Return when server has internal error and can't continue fulfilling the request
+
+    + Attributes (DefaultError503)
+    
+## Update Education School Type [PUT /user/demographic/edu/type]
+
+Update user’s education school type.
+
++ Request (application/json)
+    + Attributes
+        + uid: 123 (number, required) - Babe User ID.
+        + type: University (string, required) - School Type.
+       
++ Response 204
+
++ Response 404 (application/json)
+    Return when user id is not found
+    
+    + Attributes (DefaultError404)
+        
++ Response 503 (application/json)
+    Return when server has internal error and can't continue fulfilling the request
+
+    + Attributes (DefaultError503)
+    
+## Update Political View [PUT /user/demographic/politic]
+
+Update user’s political view.
+
++ Request (application/json)
+    + Attributes
+        + uid: 123 (number, required) - Babe User ID.
+        + polView: University (string, required) - Political view.
+       
++ Response 204
+
++ Response 404 (application/json)
+    Return when user id is not found
+    
+    + Attributes (DefaultError404)
+        
++ Response 503 (application/json)
+    Return when server has internal error and can't continue fulfilling the request
+
+    + Attributes (DefaultError503)
+    
+## Update Religion [PUT /user/demographic/religion]
+
+Update user’s religion.
+
++ Request (application/json)
+    + Attributes
+        + uid: 123 (number, required) - Babe User ID.
+        + religion: University (string, required) - Religion.
+       
++ Response 204
+
++ Response 404 (application/json)
+    Return when user id is not found
+    
+    + Attributes (DefaultError404)
+        
++ Response 503 (application/json)
+    Return when server has internal error and can't continue fulfilling the request
+
+    + Attributes (DefaultError503)  
+    
+## Update City [PUT /user/demographic/loc/city]
+
+Update user’s city location.
+
++ Request (application/json)
+    + Attributes
+        + uid: 123 (number, required) - Babe User ID.
+        + city: Tangerang (string, required) - City name.
+       
++ Response 204
+
++ Response 404 (application/json)
+    Return when user id is not found
+    
+    + Attributes (DefaultError404)
+        
++ Response 503 (application/json)
+    Return when server has internal error and can't continue fulfilling the request
+
+    + Attributes (DefaultError503)
+
+## Update Country [PUT /user/demographic/loc/country]
+
+Update user’s country location.
+
++ Request (application/json)
+    + Attributes
+        + uid: 123 (number, required) - Babe User ID.
+        + country: Indonesia (string, required) - Country name.
+       
++ Response 204
+
++ Response 404 (application/json)
+    Return when user id is not found
+    
+    + Attributes (DefaultError404)
+        
++ Response 503 (application/json)
+    Return when server has internal error and can't continue fulfilling the request
+
+    + Attributes (DefaultError503)
+     
+## Update Hometown [PUT /user/demographic/loc/hometown]
+
+Update user’s hometown location.
+
++ Request (application/json)
+    + Attributes
+        + uid: 123 (number, required) - Babe User ID.
+        + hometown: Bandung (string, required) - Hometown name.
        
 + Response 204
 
