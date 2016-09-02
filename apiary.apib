@@ -799,11 +799,13 @@ If `userid` has no GCM ID linked to it, then simply **ignore** this specific `us
 
 ### Update GCM ID [PATCH /user/gcmid/{uid}]
 
-Update user’s `:AndroidUser` GCM ID by it's user ID.
+Update user’s `:AndroidUser` GCM ID by `advId` supplied.
 
-If specified user doesn’t have `:AndroidUser` with corresponding `advId`, return HTTP 404 error. 
+If specified user doesn’t have `:AndroidUser` with corresponding `advId`, check whether user has **exactly 1** `:AndroidUser` then update it.
 
-Otherwise return HTTP 204 with no content upon success.
+Otherwise check every `:AndroidUser`, if supplied `gcmId` is not found,
+then create new `:AndroidUser` which storing the new `gcmId`. 
+Both case return HTTP 204.
 
 + Parameters
     + uid: 123 (number, required) - User ID
@@ -819,7 +821,7 @@ Otherwise return HTTP 204 with no content upon success.
     + Attributes (DefaultError400)
         
 + Response 404 (application/json)
-    Return when NO user id or advId is found
+    Return when NO user id is found
     
     + Attributes (DefaultError404)
 
@@ -847,6 +849,35 @@ Return HTTP 204 with no content upon success.
     + Attributes (DefaultError400)
         
 + Response 404 (application/json)
+    Return when the old GCM ID is not found
+    
+    + Attributes (DefaultError404)
+
++ Response 503 (application/json)
+    Return when server has internal error and can't continue fulfilling the request
+
+    + Attributes (DefaultError503)
+    
+### Delete GCM ID [DELETE /user/gcmid]
+
+Delete GCM ID with in random `:AndroidUser` node.
+
+Please NOTE this will only remove `gcmId` properties, and will only remove `:AndroidUser` node if there is no more property defined.
+
+Return HTTP 204 with no content upon success.
+
++ Request (application/json)
+    + Attributes
+        + gcmId: bk3RNwTe3H0:CI2k_HHwgIpoDKCIZvvDMExUdFQ3P1 (string, required) - Android Google Cloud Messaging ID
+        
++ Response 204
+
++ Response 400 (application/json)
+    Return when parameters requirement not met correctly
+    
+    + Attributes (DefaultError400)
+        
++ Response 404 (application/json)
     Return when GCM ID is not found
     
     + Attributes (DefaultError404)
@@ -856,15 +887,42 @@ Return HTTP 204 with no content upon success.
 
     + Attributes (DefaultError503)
     
+### Delete Bulk GCM Indices [DELETE /user/gcmid/bulk]
+
+Delete GCM Indices with in random `:AndroidUser` node.
+
+Please NOTE this will only remove `gcmId` properties, and will only remove `:AndroidUser` node if there is no more property defined.
+
+Return HTTP 204 with no content upon success.
+
++ Request (application/json)
+    + Attributes
+        + gcmIds: bk3RNwTe3H0:CI2k_HHwgIpoDKCIZvvDMExUdFQ3P1, ncrRNwTe3H0_0F82GHHwgIpoDKCIZvvDMExUdFPL1T (array[string], required) - Android Google Cloud Messaging Indices
+        
++ Response 204
+
++ Response 400 (application/json)
+    Return when parameters requirement not met correctly
+    
+    + Attributes (DefaultError400)
+    
++ Response 503 (application/json)
+    Return when server has internal error and can't continue fulfilling the request
+
+    + Attributes (DefaultError503)
+    
 ## APNS Related [/user/apns/{uid}]
     
 ### Update APNS Token [PATCH]
 
-Update user’s `:IOSUser` APNS Token by it's user ID.
+Update user’s `:IOSUser` APNS Token by `idfa` supplied.
 
-If specified user doesn’t have `:IOSUser` with corresponding `idfa`, return HTTP 404 error. 
+If specified user doesn’t have `:IOSUser` with corresponding `idfa`, check whether user has **exactly 1** `:IOSUser` then update it.
 
-Otherwise return HTTP 204 with no content upon success.
+Otherwise check every `:IOSUser`, if supplied `apnsToken` is not found,
+then create new `:IOSUser` which storing the new `apnsToken`. 
+
+
 
 + Parameters
     + uid: 123 (number, required) - User ID
