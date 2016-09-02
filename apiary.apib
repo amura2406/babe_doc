@@ -1087,16 +1087,23 @@ Update user’s age group by giving min age group & max age group.
 
     + Attributes (DefaultError503)
     
-### Update Work Employer [PUT /user/demographic/occ/employer]
+### Update Occupation [PUT /user/demographic/occ]
 
-Update user’s employer.
+Update user’s occupation detail.
 
 + Request (application/json)
     + Attributes
         + uid: 123 (number, required) - Babe User ID.
-        + employer: PT Angin Ribut (number, required) - Name of the employer
+        + employer: PT Angin Ribut (number, optional) - Name of the employer
+        + position: General Manager (string, optional) - Name of the jop position
+        + location: Jakarta (string, optional) - Location name
        
 + Response 204
+
++ Response 400 (application/json)
+    Return when no optional attributes found at all OR requirement not met correctly
+    
+    + Attributes (DefaultError400)
 
 + Response 404 (application/json)
     Return when user id is not found
@@ -1108,58 +1115,23 @@ Update user’s employer.
 
     + Attributes (DefaultError503)
     
-### Update Work Position [PUT /user/demographic/occ/position]
+## Update Education [PUT /user/demographic/edu]
 
-Update user’s job position.
-
-+ Request (application/json)
-    + Attributes
-        + uid: 123 (number, required) - Babe User ID.
-        + position: General Manager (string, required) - Name of the jop position
-       
-+ Response 204
-
-+ Response 404 (application/json)
-    Return when user id is not found
-    
-    + Attributes (DefaultError404)
-        
-+ Response 503 (application/json)
-    Return when server has internal error and can't continue fulfilling the request
-
-    + Attributes (DefaultError503)
-   
-### Update Work Location [PUT /user/demographic/occ/location]
-
-Update user’s work location.
+Update user’s education detail.
 
 + Request (application/json)
     + Attributes
         + uid: 123 (number, required) - Babe User ID.
-        + location: Jakarta (string, required) - Location name
+        + school: ITB (string, optional) - School Name.
+        + fieldOfStudy: Computer Science (string, optional) - Field of Study.
+        + type: University (string, optional) - School Type.
        
 + Response 204
 
-+ Response 404 (application/json)
-    Return when user id is not found
++ Response 400 (application/json)
+    Return when no optional attributes found at all OR requirement not met correctly
     
-    + Attributes (DefaultError404)
-        
-+ Response 503 (application/json)
-    Return when server has internal error and can't continue fulfilling the request
-
-    + Attributes (DefaultError503)
-    
-## Update Education School [PUT /user/demographic/edu/school]
-
-Update user’s education school.
-
-+ Request (application/json)
-    + Attributes
-        + uid: 123 (number, required) - Babe User ID.
-        + school: ITB (string, required) - School Name.
-       
-+ Response 204
+    + Attributes (DefaultError400)
 
 + Response 404 (application/json)
     Return when user id is not found
