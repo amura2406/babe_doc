@@ -11,15 +11,18 @@ It encapsulates and provides a suite of service endpoints to allow other compone
  
 # Group Login & Authentication
 
-## Device Login [/user/login/android{?advId,deviceId}]
-
-+ Parameters
-    + advId (string) - Google Advertising ID.
-    + deviceId (string) - Android device ID
+## Device Login [/user/login/android]
 
 ### Android User Login [POST]
 
-Add new user (with no userId known before) into database. If the advId (advertising ID) match to one of the `:AndroidUser` in the database, then return the uid (userID) of the `:CommonUser` connected to the matched `:AndroidUser` otherwise create new `:CommonUser`, generate new uid, add new node `:AndroidUser` filled with Data Params then return newly created uid.
+Add new user (with no userId known before) into database. 
+
+If the advId (advertising ID) match to one of the `:AndroidUser` in the database, then return the uid (userID) of the `:CommonUser` connected to the matched `:AndroidUser` otherwise create new `:CommonUser`, generate new uid, add new node `:AndroidUser` filled with Data Params then return newly created uid.
+
++ Request (application/json)
+    + Attributes
+        + advId (string) - Google Advertising ID.
+        + deviceId (string) - Android device ID.
 
 + Response 200 (application/json)
     + Attributes (DeviceLoginResponse)
@@ -34,13 +37,16 @@ Add new user (with no userId known before) into database. If the advId (advertis
 
     + Attributes (DefaultError503)
 
-### IOS User Login [POST /user/login/ios{?idfa,deviceId}]
+### IOS User Login [POST /user/login/ios]
 
-Add new user (with no userId known before) into database. If the idfa(Identifier for Advertiser) match to one of the `:IosUser` in the database, then return the uid (userID) of the `:CommonUser` connected to the matched `:IosUser` otherwise create new `:CommonUser`, generate new uid, add new node `:IosUser` filled with Data Params then return newly created uid.
+Add new user (with no userId known before) into database. 
 
-+ Parameters
-    + idfa (string) - Identifier for Advertiser.
-    + deviceId (string) - IOS device ID
+If the idfa(Identifier for Advertiser) match to one of the `:IosUser` in the database, then return the uid (userID) of the `:CommonUser` connected to the matched `:IosUser` otherwise create new `:CommonUser`, generate new uid, add new node `:IosUser` filled with Data Params then return newly created uid.
+
++ Request (application/json)
+    + Attributes
+        + idfa (string) - Identifier for Advertiser.
+        + deviceId (string) - IOS device ID
 
 + Response 200 (application/json)
     + Attributes (DeviceLoginResponse)
@@ -55,13 +61,16 @@ Add new user (with no userId known before) into database. If the idfa(Identifier
 
     + Attributes (DefaultError503)
             
-### Web User Login [POST /user/login/web{?gcmId,deviceId}]
+### Web User Login [POST /user/login/web]
 
-Add new user (with no userId known before) into database. If the gcmId (Google Cloud Messaging ID) match to one of the `:WebUser` in the database, then return the uid (userID) of the `:CommonUser` connected to the matched `:WebUser` otherwise create new `:CommonUser`, generate new uid, add new node `:WebUser` filled with Data Params then return newly created uid.
+Add new user (with no userId known before) into database. 
 
-+ Parameters
-    + gcmId (string) - Google Cloud Messaging ID.
-    + deviceId (string) - Web device ID
+If the gcmId (Google Cloud Messaging ID) match to one of the `:WebUser` in the database, then return the uid (userID) of the `:CommonUser` connected to the matched `:WebUser` otherwise create new `:CommonUser`, generate new uid, add new node `:WebUser` filled with Data Params then return newly created uid.
+
++ Request (application/json)
+    + Attributes
+        + gcmId (string) - Google Cloud Messaging ID.
+        + deviceId (string) - Web device ID
 
 + Response 200 (application/json)
     + Attributes (DeviceLoginResponse)
@@ -1387,7 +1396,7 @@ See success response example, it’s already in the same order as mentioned abov
 
 ## BasicUserModel (object)
 + uid: 123 (number) - Babe User ID.
-+ name: Angga Muhammad (string) - Web device ID
++ name: Angga Muhammad (string) - Name
 + babeToken: TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ (string) - BABE Generated Token
 + userAvatar: http://cdn.babe.news/images/123.jpg (string) - User Avatar Image URL
 
@@ -1438,7 +1447,7 @@ See success response example, it’s already in the same order as mentioned abov
 
 ## FBAuthRequest (BasicUserModel)
 + uid: 123 (string, required) - Babe User ID.
-+ name: Angga Muhammad (string, required) - Web device ID
++ name: Angga Muhammad (string, required) - Name
 + babeToken: TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ (string, required) - BABE Generated Token
 + date: `2016-08-31 12:00:01` (string, required) - Date formatted as (YYYY-MM-dd HH:mm:ss)
 + Include BasicFBModel
@@ -1449,7 +1458,7 @@ See success response example, it’s already in the same order as mentioned abov
 
 ## GoogleAuthRequest (BasicUserModel)
 + uid: 123 (string, required) - Babe User ID.
-+ name: Angga Muhammad (string, required) - Web device ID
++ name: Angga Muhammad (string, required) - Name
 + babeToken: TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ (string, required) - BABE Generated Token
 + date: `2016-08-31 12:00:01` (string, required) - Date formatted as (YYYY-MM-dd HH:mm:ss)
 + Include BasicGPlusModel
