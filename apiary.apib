@@ -1,5 +1,5 @@
 FORMAT: 1A
-HOST: http://localhost/v1/
+HOST: http://localhost/user/v1/
 
 # babe-user-ms
 
@@ -11,7 +11,7 @@ It encapsulates and provides a suite of service endpoints to allow other compone
  
 # Group Login & Authentication
 
-## Device Login [/user/login/android]
+## Device Login [/login/android]
 
 ### Android User Login [POST]
 
@@ -37,7 +37,7 @@ If the advId (advertising ID) match to one of the `:AndroidUser` in the database
 
     + Attributes (DefaultError503)
 
-### IOS User Login [POST /user/login/ios]
+### IOS User Login [POST /login/ios]
 
 Add new user (with no userId known before) into database. 
 
@@ -61,7 +61,7 @@ If the idfa(Identifier for Advertiser) match to one of the `:IosUser` in the dat
 
     + Attributes (DefaultError503)
             
-### Web User Login [POST /user/login/web]
+### Web User Login [POST /login/web]
 
 Add new user (with no userId known before) into database. 
 
@@ -85,7 +85,7 @@ If the gcmId (Google Cloud Messaging ID) match to one of the `:WebUser` in the d
 
     + Attributes (DefaultError503)
             
-## Social Media Login [/user/auth/fb{?uid,name,babeToken,date,fbId,fbToken,advId,gcmId,idfa,apnsToken,fbEmail,userAvatar}]
+## Social Media Login [/auth/fb]
 
 ### FB Login [POST]
 
@@ -154,7 +154,7 @@ Return the predefined user model as response.
 
     + Attributes (DefaultError503)
 
-### Google Login [POST /user/auth/google]
+### Google Login [POST /auth/google]
 
 Authenticate a user with client generated token key (shared secret) and user Google credentials to the DB. First generate the token using shared secret by :  
 ```
@@ -221,7 +221,7 @@ Return the predefined user model as response.
 
 # Group Resource User
 
-## Single User Operation [/user/{uid}]
+## Single User Operation [/{uid}]
 
 ### Get User Shared Model [POST]
 
@@ -378,7 +378,7 @@ Otherwise return HTTP 204 with no content upon success.
 
     + Attributes (DefaultError503)
     
-### Get Predefined User Model [GET /user/pre/{uid}]
+### Get Predefined User Model [GET /pre/{uid}]
 
 Get the predefined user model by looking from uid supplied. 
 
@@ -409,7 +409,7 @@ If user is not found then return HTTP 404. Otherwise return the predefined model
 
     + Attributes (DefaultError503)
 
-### Get User Shared Model by Babe Token [POST /user/bytoken/{babeToken}]
+### Get User Shared Model by Babe Token [POST /bytoken/{babeToken}]
 
 Get the user shared model by looking from babe token supplied.
 
@@ -533,7 +533,7 @@ Refer to table below of supported user's dimension
 
     + Attributes (DefaultError503)
 
-### Get Predefined User Model by Babe Token [GET /user/pre/bytoken/{babeToken}]
+### Get Predefined User Model by Babe Token [GET /pre/bytoken/{babeToken}]
 
 Get the predefined user model by looking from babe token supplied. 
 
@@ -564,7 +564,7 @@ If user is not found then return HTTP 404. Otherwise return the predefined model
 
     + Attributes (DefaultError503)
 
-## Multiple User Retrieval [/user/mget]
+## Multiple User Retrieval [/mget]
 
 ### Multi Get User Shared Model [POST]
 
@@ -687,7 +687,7 @@ Refer to table below of supported user's dimension
 
     + Attributes (DefaultError503)
 
-### Multi Get Predefined User Model [POST /user/mget/pre]
+### Multi Get Predefined User Model [POST /mget/pre]
 
 Get an array of predefined user model by looking from array of uid supplied. 
 
@@ -719,7 +719,7 @@ If no user found at all then return HTTP 404. Otherwise return partial or full u
 
     + Attributes (DefaultError503)
 
-## GCM ID Related [/user/gcmid/lim/{limit}]
+## GCM ID Related [/gcmid/lim/{limit}]
 
 ### Get Active GCM Indices [GET]
 
@@ -747,7 +747,7 @@ Pagination in orientDB is described [here](http://orientdb.com/docs/2.2/Paginati
 
     + Attributes (DefaultError503)
 
-### Get Active GCM Indices with Pagination [GET /user/gcmid/lim/{limit}/from/{lastId}]
+### Get Active GCM Indices with Pagination [GET /gcmid/lim/{limit}/from/{lastId}]
 
 Get an array of all active GCM indices from the `lastId` of the RID (Record ID) and `limit` the number of record by limit. 
 
@@ -770,7 +770,7 @@ Pagination in orientDB is described [here](http://orientdb.com/docs/2.2/Paginati
 
     + Attributes (DefaultError503)
 
-### GCM Indices From User Indices [POST /user/gcmid/find]
+### GCM Indices From User Indices [POST /gcmid/find]
 
 Get all GCM Indices from all user indices to be retrieved.
 
@@ -797,7 +797,7 @@ If `userid` has no GCM ID linked to it, then simply **ignore** this specific `us
 
     + Attributes (DefaultError503)
 
-### Update GCM ID [PATCH /user/gcmid/{uid}]
+### Update GCM ID [PATCH /gcmid/{uid}]
 
 Update user’s `:AndroidUser` GCM ID by `advId` supplied.
 
@@ -830,7 +830,7 @@ Both case return HTTP 204.
 
     + Attributes (DefaultError503)
     
-### Replace GCM ID [PUT /user/gcmid]
+### Replace GCM ID [PUT /gcmid]
 
 Replace user’s `:AndroidUser` GCM ID with the new one.
 
@@ -858,7 +858,7 @@ Return HTTP 204 with no content upon success.
 
     + Attributes (DefaultError503)
     
-### Delete GCM ID [DELETE /user/gcmid]
+### Delete GCM ID [DELETE /gcmid]
 
 Delete GCM ID with in random `:AndroidUser` node.
 
@@ -887,7 +887,7 @@ Return HTTP 204 with no content upon success.
 
     + Attributes (DefaultError503)
     
-### Delete Bulk GCM Indices [DELETE /user/gcmid/bulk]
+### Delete Bulk GCM Indices [DELETE /gcmid/bulk]
 
 Delete GCM Indices with in random `:AndroidUser` node.
 
@@ -911,7 +911,7 @@ Return HTTP 204 with no content upon success.
 
     + Attributes (DefaultError503)
     
-## APNS Related [/user/apns/{uid}]
+## APNS Related [/apns/{uid}]
     
 ### Update APNS Token [PATCH]
 
@@ -948,7 +948,7 @@ then create new `:IOSUser` which storing the new `apnsToken`.
     + Attributes (DefaultError503)
     
 
-## User Prefered Categories [/user/cat/{uid}/{icu}] 
+## User Prefered Categories [/cat/{uid}/{icu}] 
 
 ### Get User Categories by ICU [GET]
 
@@ -1009,7 +1009,7 @@ Update user’s category list, by removing all old relationships and add all new
 
     + Attributes (DefaultError503)
 
-## Banned Status [/user/ban/{uid}]
+## Banned Status [/ban/{uid}]
 
 ### Check User's Banned Status [GET]
 
@@ -1071,7 +1071,7 @@ Unban specific user id.
 
     + Attributes (DefaultError503)
 
-## User Interests [/user/interest/{uid}]
+## User Interests [/interest/{uid}]
 
 ### Update User Interest [PUT]
 
@@ -1100,9 +1100,9 @@ Update user’s interest list along with interest category for each of interest,
 
     + Attributes (DefaultError503)
 
-## Basic Demographic [/user/demographic]
+## Basic Demographic [/demographic]
 
-### Update Birthday [PUT /user/demographic/birthday]
+### Update Birthday [PUT /demographic/birthday]
 
 Update user’s birthday.
 
@@ -1123,7 +1123,7 @@ Update user’s birthday.
 
     + Attributes (DefaultError503)
 
-### Update Age Group [PUT /user/demographic/agegroup]
+### Update Age Group [PUT /demographic/agegroup]
 
 Update user’s age group by giving min age group & max age group.
 
@@ -1145,7 +1145,7 @@ Update user’s age group by giving min age group & max age group.
 
     + Attributes (DefaultError503)
     
-### Update Occupation [PUT /user/demographic/occ]
+### Update Occupation [PUT /demographic/occ]
 
 Update user’s occupation detail.
 
@@ -1173,7 +1173,7 @@ Update user’s occupation detail.
 
     + Attributes (DefaultError503)
     
-## Update Education [PUT /user/demographic/edu]
+## Update Education [PUT /demographic/edu]
 
 Update user’s education detail.
 
@@ -1201,7 +1201,7 @@ Update user’s education detail.
 
     + Attributes (DefaultError503)
 
-## Update Education Field of Study [PUT /user/demographic/edu/fos]
+## Update Education Field of Study [PUT /demographic/edu/fos]
 
 Update user’s education field of study.
 
@@ -1222,7 +1222,7 @@ Update user’s education field of study.
 
     + Attributes (DefaultError503)
     
-## Update Education School Type [PUT /user/demographic/edu/type]
+## Update Education School Type [PUT /demographic/edu/type]
 
 Update user’s education school type.
 
@@ -1243,7 +1243,7 @@ Update user’s education school type.
 
     + Attributes (DefaultError503)
     
-## Update Political View [PUT /user/demographic/politic]
+## Update Political View [PUT /demographic/politic]
 
 Update user’s political view.
 
@@ -1264,7 +1264,7 @@ Update user’s political view.
 
     + Attributes (DefaultError503)
     
-## Update Religion [PUT /user/demographic/religion]
+## Update Religion [PUT /demographic/religion]
 
 Update user’s religion.
 
@@ -1285,7 +1285,7 @@ Update user’s religion.
 
     + Attributes (DefaultError503)  
     
-## Update City [PUT /user/demographic/loc/city]
+## Update City [PUT /demographic/loc/city]
 
 Update user’s city location.
 
@@ -1306,7 +1306,7 @@ Update user’s city location.
 
     + Attributes (DefaultError503)
 
-## Update Country [PUT /user/demographic/loc/country]
+## Update Country [PUT /demographic/loc/country]
 
 Update user’s country location.
 
@@ -1327,7 +1327,7 @@ Update user’s country location.
 
     + Attributes (DefaultError503)
      
-## Update Hometown [PUT /user/demographic/loc/hometown]
+## Update Hometown [PUT /demographic/loc/hometown]
 
 Update user’s hometown location.
 
@@ -1350,9 +1350,9 @@ Update user’s hometown location.
 
 # Group Admin Control
 
-## Cache Management [/cache/prewarm]
+## Cache Management [/start]
 
-### Start-Up [POST /start]
+### Start-Up [POST]
 
 This endpoint basically will create / update `my-new-user-id` key on Redis by 2 ways:
 * Use `forceId` field if exists in the request body.
@@ -1377,7 +1377,7 @@ This endpoint basically will create / update `my-new-user-id` key on Redis by 2 
 
     + Attributes (DefaultError503)
 
-### Prewarm Cache [POST]
+### Prewarm Cache [POST /cache/prewarm]
 
 Pre-warm the redis cache by populating all relevant redis key from certain user range (`startId` to `endId`) to accommodate fast checking on login & get process. 
 
