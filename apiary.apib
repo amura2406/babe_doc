@@ -89,29 +89,29 @@ If the gcmId (Google Cloud Messaging ID) match to one of the `:WebUser` in the d
 
 ### FB Login [POST]
 
-Authenticate a user with client generated token key (shared secret) and user FB credentials to the DB. First generate the token using shared secret by : 
-```
-md5(strrev(sharedSecret + userId) + fbEmail + date)
-```
-Match the babeToken in HTTP param, if unmatch then return HTTP 401.
+1. Authenticate a user with client generated token key (shared secret) and user FB credentials to the DB. First generate the token using shared secret by : 
 
-First find `:CommonUser` or `:FBUser` in DB by querying using these precedence: 
-```
-fbEmail > fbId > uid > advId > idfa > gcmId
-```
-If the user is found, then update:
-+ *:CommonUser.name*
-+ *:CommonUser.token*
-+ *:CommonUser.userAvatar (opt)*
-+ *:CommonUser.updated*
-+ *:AUTH_BY.lastLogin*
-+ *:FBUser.email (opt)*
-+ *:FBUser.fbId*
-+ *:FBUser.fbToken*
+        md5(strrev(sharedSecret + userId) + fbEmail + date)
 
-If the user is not found then create new `:CommonUser` with relationship to new `:FBUser` and also relationship to either `:AndroidUser`, `:IOSUser` or `:WebUser` based on the HTTP param which is present (advId, idfa, gcmId).
+2. Match the babeToken in HTTP param, if unmatched then return HTTP 401.
 
-Either way, put these key-value into redis *(Cache per dimension)*:
+3. First find `:CommonUser` or `:FBUser` in DB by querying using these precedence: 
+
+        fbEmail > fbId > uid > advId > idfa > gcmId
+
+4. If the user is found, then update:
+    + *:CommonUser.name*
+    + *:CommonUser.token*
+    + *:CommonUser.userAvatar (opt)*
+    + *:CommonUser.updated*
+    + *:AUTH_BY.lastLogin*
+    + *:FBUser.email (opt)*
+    + *:FBUser.fbId*
+    + *:FBUser.fbToken*
+
+5. If the user is not found then create new `:CommonUser` with relationship to new `:FBUser` and also relationship to either `:AndroidUser`, `:IOSUser` or `:WebUser` based on the HTTP param which is present (advId, idfa, gcmId).
+
+6. Either way, put these key-value into redis *(Cache per dimension)*:
 
 | Redis Key                            | TTL    | Desc                                         |
 |--------------------------------------|--------|----------------------------------------------|
@@ -129,7 +129,13 @@ Either way, put these key-value into redis *(Cache per dimension)*:
 | `x-dimens-occupation-id:{uid}`       | 30 day | JSON Formatted User's Occupation Object      |
 | `x-dimens-education-id:{uid}`        | 30 day | JSON Formatted User's Education Object       |
 
-Also put pair of uid & fbToken into MQ queue : `fb_demographic`.
+7. Check whether the connected `AndroidUser` has any `IS_A` relationship to another `CommonUser`, If it has, then switch `IS_A` relationship to this `CommonUser`. Otherwise create `IS_A` relationship to `AndroidUser` and each `AndroidUser` can only has **1** at the same time.
+
+8. Check whether the connected `IOSUser` has any `IS_A` relationship to another `CommonUser`, If it has, then switch `IS_A` relationship to this `CommonUser`. Otherwise create `IS_A` relationship to `IOSUser` and each `IOSUser` can only has **1** at the same time.
+
+9. Check whether the connected `WebUser` has any `IS_A` relationship to another `CommonUser`, If it has, then switch `IS_A` relationship to this `CommonUser`. Otherwise create `IS_A` relationship to `WebUser` and each `WebUser` can only has **1** at the same time.
+
+10. Put pair of uid & fbToken into MQ queue : `fb_demographic`.
 
 Return the predefined user model as response.
 
@@ -156,29 +162,29 @@ Return the predefined user model as response.
 
 ### Google Login [POST /auth/google]
 
-Authenticate a user with client generated token key (shared secret) and user Google credentials to the DB. First generate the token using shared secret by :  
-```
-md5(strrev(sharedSecret + userId) + gEmail + date)
-```
-Match the babeToken in HTTP param, if unmatch then return HTTP 401.
+1. Authenticate a user with client generated token key (shared secret) and user Google credentials to the DB. First generate the token using shared secret by :  
 
-First find `:CommonUser` or `:GoogleUser` in DB by querying using these precedence: 
-```
-gpEmail > gpId > uid > advId > idfa > gcmId
-```
-If the user is found, then update:
-+ *:CommonUser.name*
-+ *:CommonUser.token*
-+ *:CommonUser.userAvatar (opt)*
-+ *:CommonUser.updated*
-+ *:AUTH_BY.lastLogin*
-+ *:GoogleUser.email*
-+ *:GoogleUser.gId*
-+ *:GoogleUser.gToken*
+        md5(strrev(sharedSecret + userId) + gEmail + date)
 
-If the user is not found then create new `:CommonUser` with relationship to new `:GoogleUser` and also relationship to either `:AndroidUser`, `:IOSUser` or `:WebUser` based on the HTTP param which is present (advId, idfa, gcmId).
+2. Match the babeToken in HTTP param, if unmatch then return HTTP 401.
 
-Either way, put these key-value into redis *(Cache per dimension)*:
+3. First find `:CommonUser` or `:GoogleUser` in DB by querying using these precedence: 
+
+        gpEmail > gpId > uid > advId > idfa > gcmId
+
+4. If the user is found, then update:
+    + *:CommonUser.name*
+    + *:CommonUser.token*
+    + *:CommonUser.userAvatar (opt)*
+    + *:CommonUser.updated*
+    + *:AUTH_BY.lastLogin*
+    + *:GoogleUser.email*
+    + *:GoogleUser.gId*
+    + *:GoogleUser.gToken*
+
+5. If the user is not found then create new `:CommonUser` with relationship to new `:GoogleUser` and also relationship to either `:AndroidUser`, `:IOSUser` or `:WebUser` based on the HTTP param which is present (advId, idfa, gcmId).
+
+6. Either way, put these key-value into redis *(Cache per dimension)*:
 
 | Redis Key                            | TTL    | Desc                                         |
 |--------------------------------------|--------|----------------------------------------------|
@@ -196,7 +202,13 @@ Either way, put these key-value into redis *(Cache per dimension)*:
 | `x-dimens-occupation-id:{uid}`       | 30 day | JSON Formatted User's Occupation Object      |
 | `x-dimens-education-id:{uid}`        | 30 day | JSON Formatted User's Education Object       |
 
-Return the predefined user model as response.
+7. Check whether the connected `AndroidUser` has any `IS_A` relationship to another `CommonUser`, If it has, then switch `IS_A` relationship to this `CommonUser`. Otherwise create `IS_A` relationship to `AndroidUser` and each `AndroidUser` can only has **1** at the same time.
+
+8. Check whether the connected `IOSUser` has any `IS_A` relationship to another `CommonUser`, If it has, then switch `IS_A` relationship to this `CommonUser`. Otherwise create `IS_A` relationship to `IOSUser` and each `IOSUser` can only has **1** at the same time.
+
+9. Check whether the connected `WebUser` has any `IS_A` relationship to another `CommonUser`, If it has, then switch `IS_A` relationship to this `CommonUser`. Otherwise create `IS_A` relationship to `WebUser` and each `WebUser` can only has **1** at the same time.
+
+10. Return the predefined user model as response.
 
 + Request (application/json)
     + Attributes (GoogleAuthRequest)
@@ -774,7 +786,7 @@ Pagination in orientDB is described [here](http://orientdb.com/docs/2.2/Paginati
 
 Get all GCM Indices from all user indices to be retrieved.
 
-Return all GCM Indices from each userid into array of gcmid.
+If `userid` has more than 1 GCM ID, then return only the GCM ID linked to `AndroidUser` which has `IS_A` relationship.
 
 If `userid` has no GCM ID linked to it, then include `userid` in the return payload but with `null` on `gcmids` field.
 
@@ -1504,7 +1516,7 @@ See success response example, it’s already in the same order as mentioned abov
 
 ## UserToGCMModel (object)
 + uid: 123 (number) - User ID
-+ gcmids: `bk3RNwTe3H0:CI2k_HHwgIpoDKCIZvvDMExUdFQ3P1`, `k98RNwTe3H0:CK2k_MNwgIpoDKCIZvvDMExUdFQLG1` (array[string]) - GCM Indices
++ gcmid: `bk3RNwTe3H0:CI2k_HHwgIpoDKCIZvvDMExUdFQ3P1` (string) - GCM ID
 
 ## UserPredefinedModel (ExtendedUserModel)
 + categories: [1, 3, 9, 21, 55] (array[number]) - User category preference 
