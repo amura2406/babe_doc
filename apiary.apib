@@ -734,6 +734,34 @@ If no user found at all then return HTTP 404. Otherwise return partial or full u
     Return when server has internal error and can't continue fulfilling the request
 
     + Attributes (DefaultError503)
+    
+### Multi Get User "Has Social Media Login" Status [POST /mget/socstatus]
+
+Get an array of status for each `uid` given in the request `array` of whether `uid` is connected to **ANY** social media at all (FB or Google). 
+
+If it is found then return **1**, otherwise returns **0**.
+
+If `uid` is not found in database, returns **-1**
+
+**IMPORTANT** if, size of requested ids is bigger than 10000 then return HTTP 400 Bad Request.
+
++ Request (application/json)
+    + Attributes
+        + uids: 123, 567, 999 (array[number], required) - User Indices
+
++ Response 200 (application/json)    
+    + Attributes
+        + status: 1, 1, 0 (array[number]) - User Status Flag
+
++ Response 400 (application/json)
+    Return when parameters requirement not met correctly
+    
+    + Attributes (DefaultError400)
+        
++ Response 503 (application/json)
+    Return when server has internal error and can't continue fulfilling the request
+
+    + Attributes (DefaultError503)
 
 ## GCM ID Related [/gcmid/lim/{limit}]
 
