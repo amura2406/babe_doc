@@ -774,9 +774,9 @@ Pagination in orientDB is described [here](http://orientdb.com/docs/2.2/Paginati
 
 Get all GCM Indices from all user indices to be retrieved.
 
-If `userid` has more than 1 GCM ID, then return only the latest GCM ID by `lastLogin` attribute.
+Return all GCM Indices from each userid into array of gcmid.
 
-If `userid` has no GCM ID linked to it, then simply **ignore** this specific `userid`.
+If `userid` has no GCM ID linked to it, then include `userid` in the return payload but with `null` on `gcmids` field.
 
 **IMPORTANT** if, size of requested ids is bigger than 1000 then return HTTP 400 Bad Request.
 
@@ -1504,7 +1504,7 @@ See success response example, it’s already in the same order as mentioned abov
 
 ## UserToGCMModel (object)
 + uid: 123 (number) - User ID
-+ gcmid: `bk3RNwTe3H0:CI2k_HHwgIpoDKCIZvvDMExUdFQ3P1` (string) - GCM ID
++ gcmids: `bk3RNwTe3H0:CI2k_HHwgIpoDKCIZvvDMExUdFQ3P1`, `k98RNwTe3H0:CK2k_MNwgIpoDKCIZvvDMExUdFQLG1` (string) - GCM Indices
 
 ## UserPredefinedModel (ExtendedUserModel)
 + categories: [1, 3, 9, 21, 55] (array[number]) - User category preference 
