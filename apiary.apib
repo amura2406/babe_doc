@@ -111,7 +111,19 @@ If the gcmId (Google Cloud Messaging ID) match to one of the `:WebUser` in the d
 
 5. If the user is not found then create new `:CommonUser` with relationship to new `:FBUser` and also relationship to either `:AndroidUser`, `:IOSUser` or `:WebUser` based on the HTTP param which is present (advId, idfa, gcmId).
 
-6. Either way, put these key-value into redis *(Cache per dimension)*:
+6. Either way, put these key-value into redis *(Cache per dimension)* *see below:
+
+7. Check whether the connected `AndroidUser` has any `IS_A` relationship to another `CommonUser`, If it has, then switch `IS_A` relationship to this `CommonUser`. Otherwise create `IS_A` relationship to `AndroidUser` and each `AndroidUser` can only has **1** at the same time.
+
+8. Check whether the connected `IOSUser` has any `IS_A` relationship to another `CommonUser`, If it has, then switch `IS_A` relationship to this `CommonUser`. Otherwise create `IS_A` relationship to `IOSUser` and each `IOSUser` can only has **1** at the same time.
+
+9. Check whether the connected `WebUser` has any `IS_A` relationship to another `CommonUser`, If it has, then switch `IS_A` relationship to this `CommonUser`. Otherwise create `IS_A` relationship to `WebUser` and each `WebUser` can only has **1** at the same time.
+
+10. Put pair of uid & fbToken into MQ queue : `fb_demographic`.
+
+11. Return the predefined user model as response.
+
+#### Redis Key To Be Defined on Point 6
 
 | Redis Key                            | TTL    | Desc                                         |
 |--------------------------------------|--------|----------------------------------------------|
@@ -128,16 +140,6 @@ If the gcmId (Google Cloud Messaging ID) match to one of the `:WebUser` in the d
 | `x-dimens-interests-id:{uid}`        | 30 day | JSON Formatted User's Interest Object        |
 | `x-dimens-occupation-id:{uid}`       | 30 day | JSON Formatted User's Occupation Object      |
 | `x-dimens-education-id:{uid}`        | 30 day | JSON Formatted User's Education Object       |
-
-7. Check whether the connected `AndroidUser` has any `IS_A` relationship to another `CommonUser`, If it has, then switch `IS_A` relationship to this `CommonUser`. Otherwise create `IS_A` relationship to `AndroidUser` and each `AndroidUser` can only has **1** at the same time.
-
-8. Check whether the connected `IOSUser` has any `IS_A` relationship to another `CommonUser`, If it has, then switch `IS_A` relationship to this `CommonUser`. Otherwise create `IS_A` relationship to `IOSUser` and each `IOSUser` can only has **1** at the same time.
-
-9. Check whether the connected `WebUser` has any `IS_A` relationship to another `CommonUser`, If it has, then switch `IS_A` relationship to this `CommonUser`. Otherwise create `IS_A` relationship to `WebUser` and each `WebUser` can only has **1** at the same time.
-
-10. Put pair of uid & fbToken into MQ queue : `fb_demographic`.
-
-Return the predefined user model as response.
 
 + Request (application/json)
     + Attributes (FBAuthRequest)
@@ -184,7 +186,17 @@ Return the predefined user model as response.
 
 5. If the user is not found then create new `:CommonUser` with relationship to new `:GoogleUser` and also relationship to either `:AndroidUser`, `:IOSUser` or `:WebUser` based on the HTTP param which is present (advId, idfa, gcmId).
 
-6. Either way, put these key-value into redis *(Cache per dimension)*:
+6. Either way, put these key-value into redis *(Cache per dimension)* *see below:
+
+7. Check whether the connected `AndroidUser` has any `IS_A` relationship to another `CommonUser`, If it has, then switch `IS_A` relationship to this `CommonUser`. Otherwise create `IS_A` relationship to `AndroidUser` and each `AndroidUser` can only has **1** at the same time.
+
+8. Check whether the connected `IOSUser` has any `IS_A` relationship to another `CommonUser`, If it has, then switch `IS_A` relationship to this `CommonUser`. Otherwise create `IS_A` relationship to `IOSUser` and each `IOSUser` can only has **1** at the same time.
+
+9. Check whether the connected `WebUser` has any `IS_A` relationship to another `CommonUser`, If it has, then switch `IS_A` relationship to this `CommonUser`. Otherwise create `IS_A` relationship to `WebUser` and each `WebUser` can only has **1** at the same time.
+
+10. Return the predefined user model as response.
+
+#### Redis Key To Be Defined on Point 6
 
 | Redis Key                            | TTL    | Desc                                         |
 |--------------------------------------|--------|----------------------------------------------|
@@ -201,14 +213,6 @@ Return the predefined user model as response.
 | `x-dimens-interests-id:{uid}`        | 30 day | JSON Formatted User's Interest Object        |
 | `x-dimens-occupation-id:{uid}`       | 30 day | JSON Formatted User's Occupation Object      |
 | `x-dimens-education-id:{uid}`        | 30 day | JSON Formatted User's Education Object       |
-
-7. Check whether the connected `AndroidUser` has any `IS_A` relationship to another `CommonUser`, If it has, then switch `IS_A` relationship to this `CommonUser`. Otherwise create `IS_A` relationship to `AndroidUser` and each `AndroidUser` can only has **1** at the same time.
-
-8. Check whether the connected `IOSUser` has any `IS_A` relationship to another `CommonUser`, If it has, then switch `IS_A` relationship to this `CommonUser`. Otherwise create `IS_A` relationship to `IOSUser` and each `IOSUser` can only has **1** at the same time.
-
-9. Check whether the connected `WebUser` has any `IS_A` relationship to another `CommonUser`, If it has, then switch `IS_A` relationship to this `CommonUser`. Otherwise create `IS_A` relationship to `WebUser` and each `WebUser` can only has **1** at the same time.
-
-10. Return the predefined user model as response.
 
 + Request (application/json)
     + Attributes (GoogleAuthRequest)
