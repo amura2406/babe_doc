@@ -260,10 +260,11 @@ Refer to table below of supported user's dimension
 |                      |                 | token (String)                    |
 |                      |                 | userAvatar (String)               |
 |                      |                 | lastSeen (Timestamp)              |
-| **full**             | Flatten         | username (String)                 |
-|                      |                 | created (Timestamp)               |
+| **full**             | Flatten         | created (Timestamp)               |
 |                      |                 | updated (Timestamp)               |
 |                      |                 | enabled (Boolean)                 |
+|                      |                 | admin (Boolean)                   |
+|                      |                 | banned (Boolean)                  |
 | **iosuser**          | Array of Object | idfa (String)                     |
 |                      |                 | apnsToken (String)                |
 |                      |                 | deviceId (String)                 |
@@ -280,8 +281,10 @@ Refer to table below of supported user's dimension
 |                      |                 | id (String)                       |
 |                      |                 | token (String)                    |
 |                      |                 | lastLogin (Timestamp)             |
-| **interest**         | Array of Object | name (String)                     |
-|                      |                 | weight (Double)                   |
+| **interest**         | Array of Object | category (String)                 |
+|                      |                 | interests (Array)                 |
+|                      |                 |   + name (String)                 |
+|                      |                 |   + weight (String)               |
 | **interestcategory** | Array of Object | name (String)                     |
 |                      |                 | weight (Double)                   |
 | **basicdemographic** | Flatten         | birthday (Timestamp)              |
@@ -293,8 +296,8 @@ Refer to table below of supported user's dimension
 |                      |                 | fieldOfStudy (String)             |
 |                      |                 | schoolType (String)               |
 | **occupation**       | Flatten         | employer (String)                 |
-|                      |                 | position (String)                 |
-|                      |                 | location (String)                 |
+|                      |                 | workPosition (String)             |
+|                      |                 | workLocation (String)             |
 | **location**         | Flatten         | hometown (String)                 |
 |                      |                 | country (String)                  |
 |                      |                 | city (String)                     |
@@ -446,10 +449,11 @@ Refer to table below of supported user's dimension
 |                      |                 | token (String)                    |
 |                      |                 | userAvatar (String)               |
 |                      |                 | lastSeen (Timestamp)              |
-| **full**             | Flatten         | username (String)                 |
-|                      |                 | created (Timestamp)               |
+| **full**             | Flatten         | created (Timestamp)               |
 |                      |                 | updated (Timestamp)               |
 |                      |                 | enabled (Boolean)                 |
+|                      |                 | admin (Boolean)                   |
+|                      |                 | banned (Boolean)                  |
 | **iosuser**          | Array of Object | idfa (String)                     |
 |                      |                 | apnsToken (String)                |
 |                      |                 | deviceId (String)                 |
@@ -466,8 +470,10 @@ Refer to table below of supported user's dimension
 |                      |                 | id (String)                       |
 |                      |                 | token (String)                    |
 |                      |                 | lastLogin (Timestamp)             |
-| **interest**         | Array of Object | name (String)                     |
-|                      |                 | weight (Double)                   |
+| **interest**         | Array of Object | category (String)                 |
+|                      |                 | interests (Array)                 |
+|                      |                 |   + name (String)                 |
+|                      |                 |   + weight (String)               |
 | **interestcategory** | Array of Object | name (String)                     |
 |                      |                 | weight (Double)                   |
 | **basicdemographic** | Flatten         | birthday (Timestamp)              |
@@ -479,8 +485,8 @@ Refer to table below of supported user's dimension
 |                      |                 | fieldOfStudy (String)             |
 |                      |                 | schoolType (String)               |
 | **occupation**       | Flatten         | employer (String)                 |
-|                      |                 | position (String)                 |
-|                      |                 | location (String)                 |
+|                      |                 | workPosition (String)             |
+|                      |                 | workLocation (String)             |
 | **location**         | Flatten         | hometown (String)                 |
 |                      |                 | country (String)                  |
 |                      |                 | city (String)                     |
@@ -602,10 +608,11 @@ Refer to table below of supported user's dimension
 |                      |                 | token (String)                    |
 |                      |                 | userAvatar (String)               |
 |                      |                 | lastSeen (Timestamp)              |
-| **full**             | Flatten         | username (String)                 |
-|                      |                 | created (Timestamp)               |
+| **full**             | Flatten         | created (Timestamp)               |
 |                      |                 | updated (Timestamp)               |
 |                      |                 | enabled (Boolean)                 |
+|                      |                 | admin (Boolean)                   |
+|                      |                 | banned (Boolean)                  |
 | **iosuser**          | Array of Object | idfa (String)                     |
 |                      |                 | apnsToken (String)                |
 |                      |                 | deviceId (String)                 |
@@ -622,8 +629,10 @@ Refer to table below of supported user's dimension
 |                      |                 | id (String)                       |
 |                      |                 | token (String)                    |
 |                      |                 | lastLogin (Timestamp)             |
-| **interest**         | Array of Object | name (String)                     |
-|                      |                 | weight (Double)                   |
+| **interest**         | Array of Object | category (String)                 |
+|                      |                 | interests (Array)                 |
+|                      |                 |   + name (String)                 |
+|                      |                 |   + weight (String)               |
 | **interestcategory** | Array of Object | name (String)                     |
 |                      |                 | weight (Double)                   |
 | **basicdemographic** | Flatten         | birthday (Timestamp)              |
@@ -635,8 +644,8 @@ Refer to table below of supported user's dimension
 |                      |                 | fieldOfStudy (String)             |
 |                      |                 | schoolType (String)               |
 | **occupation**       | Flatten         | employer (String)                 |
-|                      |                 | position (String)                 |
-|                      |                 | location (String)                 |
+|                      |                 | workPosition (String)             |
+|                      |                 | workLocation (String)             |
 | **location**         | Flatten         | hometown (String)                 |
 |                      |                 | country (String)                  |
 |                      |                 | city (String)                     |
@@ -1460,7 +1469,6 @@ See success response example, it’s already in the same order as mentioned abov
 
 
 
-
 # Data Structures
 
 ## DeviceLoginResponse (object)
@@ -1477,11 +1485,13 @@ See success response example, it’s already in the same order as mentioned abov
 
 ## ExtendedUserModel (BasicPlusUserModel)
 + enabled: true (boolean) - Toggle whether user is active or not
-+ admin: false (boolean) - Toggle whether user has admin priviledge or not
++ admin: false (boolean) - Toggle whether user has admin privilege or not
 + banned: false (boolean) - Toggle whether user is banned or not
-+ birthday: 567993600 (number) - User's birthday
 + created: 1465631405 (number) - When the user created in the system (timestamp)
 + updated: 1465631405 (number) - When the user record is updated (timestamp)
+
+## ExtendedPlusBirthdayUserModel (ExtendedUserModel)
++ birthday: 567993600 (number) - User's birthday
 
 ## BasicUserUpdateRequest (object)
 + babeToken: TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ (string) - BABE Generated Token
@@ -1550,7 +1560,7 @@ See success response example, it’s already in the same order as mentioned abov
 + uid: 123 (number) - User ID
 + gcmid: `bk3RNwTe3H0:CI2k_HHwgIpoDKCIZvvDMExUdFQ3P1` (string) - GCM ID
 
-## UserPredefinedModel (ExtendedUserModel)
+## UserPredefinedModel (ExtendedPlusBirthdayUserModel)
 + categories: [1, 3, 9, 21, 55] (array[number]) - User category preference 
 + Include BasicFBModel
 + Include BasicGPlusModel
@@ -1560,14 +1570,18 @@ See success response example, it’s already in the same order as mentioned abov
 + interests (array[UserInterestModel])
 
 ## UserInterestModel (object)
-+ name: Katty Perry (string, required) - Name of interest
++ name: `Katty Perry` (string, required) - Name of interest
 + weight: `1.0` (number, optional) - Weight of interest
+
+## UserInterestCategoryModel (object)
++ category: `Music` (string, required) - Name of the interest category
++ interests (UserInterestModel)
 
 ## UserPlusAndFBModel (BasicPlusUserModel)
 + fbUser (SharedFBModel)
 
 ## UserPlusAndInterestModel (BasicPlusUserModel)
-+ interest (array[UserInterestModel])
++ interest (array[UserInterestCategoryModel])
 
 ## Error (object)
 + errCode (number) - Error Code
