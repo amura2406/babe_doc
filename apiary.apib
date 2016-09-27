@@ -282,11 +282,9 @@ Refer to table below of supported user's dimension
 |                      |                 | token (String)                    |
 |                      |                 | lastLogin (Timestamp)             |
 | **interest**         | Array of Object | category (String)                 |
-|                      |                 | interests (Array)                 |
-|                      |                 |   + name (String)                 |
-|                      |                 |   + weight (String)               |
-| **interestcategory** | Array of Object | name (String)                     |
-|                      |                 | weight (Double)                   |
+|                      |                 | interests (Array of Object)       |
+|                      |                 | ˪ name (String)                   |
+|                      |                 | ˪ weight (String)                 |
 | **basicdemographic** | Flatten         | birthday (Timestamp)              |
 |                      |                 | ageGroup (String) = "*min - ?max" |
 |                      |                 | gender (String)                   |
@@ -318,7 +316,6 @@ Refer to table below of supported user's dimension
             - fbuser
             - googleuser
             - interest
-            - interestcategory
             - basicdemographic
             - education
             - occupation
@@ -471,11 +468,9 @@ Refer to table below of supported user's dimension
 |                      |                 | token (String)                    |
 |                      |                 | lastLogin (Timestamp)             |
 | **interest**         | Array of Object | category (String)                 |
-|                      |                 | interests (Array)                 |
-|                      |                 |   + name (String)                 |
-|                      |                 |   + weight (String)               |
-| **interestcategory** | Array of Object | name (String)                     |
-|                      |                 | weight (Double)                   |
+|                      |                 | interests (Array of Object)       |
+|                      |                 | ˪ name (String)                   |
+|                      |                 | ˪ weight (String)                 |
 | **basicdemographic** | Flatten         | birthday (Timestamp)              |
 |                      |                 | ageGroup (String) = "*min - ?max" |
 |                      |                 | gender (String)                   |
@@ -630,11 +625,9 @@ Refer to table below of supported user's dimension
 |                      |                 | token (String)                    |
 |                      |                 | lastLogin (Timestamp)             |
 | **interest**         | Array of Object | category (String)                 |
-|                      |                 | interests (Array)                 |
-|                      |                 |   + name (String)                 |
-|                      |                 |   + weight (String)               |
-| **interestcategory** | Array of Object | name (String)                     |
-|                      |                 | weight (Double)                   |
+|                      |                 | interests (Array of Object)       |
+|                      |                 | ˪ name (String)                   |
+|                      |                 | ˪ weight (String)                 |
 | **basicdemographic** | Flatten         | birthday (Timestamp)              |
 |                      |                 | ageGroup (String) = "*min - ?max" |
 |                      |                 | gender (String)                   |
@@ -1185,6 +1178,30 @@ Update user’s age group by giving min age group & max age group.
         + uid: 123 (number, required) - Babe User ID.
         + min: 18 (number, required) - Min Age Range
         + max: 24 (number) - Max Age Range
+       
++ Response 204
+
++ Response 404 (application/json)
+    Return when user id is not found
+    
+    + Attributes (DefaultError404)
+        
++ Response 503 (application/json)
+    Return when server has internal error and can't continue fulfilling the request
+
+    + Attributes (DefaultError503)
+    
+### Update Gender [PUT /demographic/gender]
+
+Update user’s birthday.
+
++ Request (application/json)
+    + Attributes
+        + uid: 123 (number, required) - Babe User ID.
+        + gender: `male` (enum[string], required) - User's gender
+            + Members
+                + `male`
+                + `female`
        
 + Response 204
 
