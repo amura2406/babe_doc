@@ -284,7 +284,7 @@ Refer to table below of supported user's dimension
 | **interest**         | Array of Object | category (String)                 |
 |                      |                 | interests (Array of Object)       |
 |                      |                 | ˪ name (String)                   |
-|                      |                 | ˪ weight (String)                 |
+|                      |                 | ˪ weight (double)                 |
 | **basicdemographic** | Flatten         | birthday (Timestamp)              |
 |                      |                 | ageGroup (String) = "*min - ?max" |
 |                      |                 | gender (String)                   |
@@ -470,7 +470,7 @@ Refer to table below of supported user's dimension
 | **interest**         | Array of Object | category (String)                 |
 |                      |                 | interests (Array of Object)       |
 |                      |                 | ˪ name (String)                   |
-|                      |                 | ˪ weight (String)                 |
+|                      |                 | ˪ weight (double)                 |
 | **basicdemographic** | Flatten         | birthday (Timestamp)              |
 |                      |                 | ageGroup (String) = "*min - ?max" |
 |                      |                 | gender (String)                   |
@@ -627,7 +627,7 @@ Refer to table below of supported user's dimension
 | **interest**         | Array of Object | category (String)                 |
 |                      |                 | interests (Array of Object)       |
 |                      |                 | ˪ name (String)                   |
-|                      |                 | ˪ weight (String)                 |
+|                      |                 | ˪ weight (double)                 |
 | **basicdemographic** | Flatten         | birthday (Timestamp)              |
 |                      |                 | ageGroup (String) = "*min - ?max" |
 |                      |                 | gender (String)                   |
@@ -1260,48 +1260,6 @@ Update user’s education detail.
     Return when no optional attributes found at all OR requirement not met correctly
     
     + Attributes (DefaultError400)
-
-+ Response 404 (application/json)
-    Return when user id is not found
-    
-    + Attributes (DefaultError404)
-        
-+ Response 503 (application/json)
-    Return when server has internal error and can't continue fulfilling the request
-
-    + Attributes (DefaultError503)
-
-## Update Education Field of Study [PUT /demographic/edu/fos]
-
-Update user’s education field of study.
-
-+ Request (application/json)
-    + Attributes
-        + uid: 123 (number, required) - Babe User ID.
-        + fieldOfStudy: Computer Science (string, required) - Field of Study.
-       
-+ Response 204
-
-+ Response 404 (application/json)
-    Return when user id is not found
-    
-    + Attributes (DefaultError404)
-        
-+ Response 503 (application/json)
-    Return when server has internal error and can't continue fulfilling the request
-
-    + Attributes (DefaultError503)
-    
-## Update Education School Type [PUT /demographic/edu/type]
-
-Update user’s education school type.
-
-+ Request (application/json)
-    + Attributes
-        + uid: 123 (number, required) - Babe User ID.
-        + type: University (string, required) - School Type.
-       
-+ Response 204
 
 + Response 404 (application/json)
     Return when user id is not found
