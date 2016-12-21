@@ -831,8 +831,20 @@ If `userid` has no GCM ID linked to it, then include `userid` in the return payl
         + uids : 123, 456, 789 (array[number]) - Array of User Indices which GCM Indices will be retrieved
 
 + Response 200 (application/json)
-    + Attributes (array[UserToGCMModel])
-
+    + Attributes
+        + userGcm (array[UserToGCMModel]) - UserGcm.
+        
+    + Body
+       
+            {
+              "userGcm": [
+                {
+                  "uid": 3,
+                  "gcmId": "Terbaru"
+                }
+              ]
+            }
+            
 + Response 400 (application/json)
     Return when parameters requirement not met correctly
     
@@ -1534,7 +1546,7 @@ See success response example, it’s already in the same order as mentioned abov
 
 ## UserToGCMModel (object)
 + uid: 123 (number) - User ID
-+ gcmid: `bk3RNwTe3H0:CI2k_HHwgIpoDKCIZvvDMExUdFQ3P1` (string) - GCM ID
++ gcmId: `bk3RNwTe3H0:CI2k_HHwgIpoDKCIZvvDMExUdFQ3P1` (string) - GCM ID
 
 ## UserPredefinedModel (ExtendedPlusBirthdayUserModel)
 + categories: [1, 3, 9, 21, 55] (array[number]) - User category preference 
