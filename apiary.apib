@@ -1038,13 +1038,19 @@ Get the user’s prefered categories by ICU.
 
     + Attributes (DefaultError503)
     
-### Update User Categories by ICU [PUT]
+### Update User Categories by ICU [PUT /cat/{uid}/{icu}/{type}]
 
-Update user’s category list, by removing all old relationships and add all new categories based on icu, eg: “id-id” will only affect all relationship to category which icu is “id-id”.
+Update user’s category list, by removing all old relationships and add all new categories based on icu and category type, 
+Category Type : 
++ 1 = Article
++ 2 = Video
+
+eg: icu = “id-id”, type = 2 will only affect all relationship to category which icu is “id-id” and category type = 2.
  
 + Parameters
     + uid: 123 (number, required) - User ID
     + icu: `id-id` (string, required) - locale ID
+    + type: 1 (number, required) - Category Type
 
 + Request (application/json)
     + Attributes
