@@ -301,6 +301,13 @@ Refer to table below of supported user's dimension
 |                      |                 | city (String)                     |
 | **exclusion**        | Single Object   | catIds (Array of Object)          |
 |                      |                 | srcIds (Array of Object)          |
+| **context**          | Single Object   | city (String)                     |
+|                      |                 | country (String)                  |
+|                      |                 | tzName (String)                   |
+|                      |                 | tzOffset (String)                 |
+|                      |                 | latitude (Number)                 |
+|                      |                 | longitude (Number)                |
+
 
 + Parameters
     + uid: 123 (number) - User ID
@@ -346,9 +353,18 @@ Refer to table below of supported user's dimension
     Dimension is `interest`
     + Attributes
         + dimension: interest
-        
+
 + Response 200 (application/json)
     + Attributes (UserPlusAndInterestModel)
+    
+        
++ Request (application/json) 
+    Dimension is `context`
+    + Attributes
+        + dimension: context
+
++ Response 200 (application/json)
+    + Attributes (UserPlusAndContextModel)
 
 + Response 400 (application/json)
     Return when parameters requirement not met correctly
@@ -1690,6 +1706,18 @@ See success response example, it’s already in the same order as mentioned abov
 
 ## UserPlusAndInterestModel (BasicPlusUserModel)
 + interest (array[UserInterestCategoryModel])
+
+## UserContextModel (object)
++ category: `Music` (string, required) - Name of the interest category
++ longitude: `6.6` (number, optional) - Longitude
++ latitude: `7.7` (number, optional) - Latitude
++ city: `Jakarta` (string, optional) - City
++ country: `Indonesia` (string, optional) - Country
++ tzName: `WIB` (string, optional) - Time Zone Name
++ tzOffset: `2900` (string, optional) - Time Zone Offset
+
+## UserPlusAndContextModel (BasicPlusUserModel)
++ context (UserContextModel)
 
 ## Error (object)
 + errCode (number) - Error Code
