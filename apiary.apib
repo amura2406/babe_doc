@@ -1492,10 +1492,11 @@ Update user’s hometown location.
     + Attributes (DefaultError503)
 
 ## User Context [/context]
+User Context that representate user's location at a time.
 
-### Update User Context [POST /context/upd/]
-
+### Update User Context with Toutiau integration [POST /context/upd/]
 Update User Context
+
 + Request (application/json)
     + Attributes
         + uid: 123 (number, required) - Babe User ID.
@@ -1511,6 +1512,89 @@ Update User Context
         + osApi: 1 (number, optional) - OS API version, eg 26 for Android 8.0
         + osVersion: Jelly Beans (string, optional) - OS version, e.g.  "8.0"
         + deviceType: ios (string, required) - ios or android
+
++ Response 204
+
++ Response 404 (application/json)
+    Return when user id is not found
+    
+    + Attributes (DefaultError404)
+        
++ Response 503 (application/json)
+    Return when server has internal error and can't continue fulfilling the request
+
+    + Attributes (DefaultError503)
+
+### Upsert User Context [POST /context/]
+Insert or update User Context and map it into user_context table
+
++ Request (application/json)
+    + Attributes
+        + uid: 123 (number, required) - Babe User ID.
+        + tzName: WIB (string, optional) - Time Zone Name
+        + tzOffset: 2900 (string, optional) - Time Zone Offset
+        + city: Jakarta (string, optional) - City
+        + country: Indonesia (string, optional) - Country
+        + longitude: 6.6 (number, optional) - Longitude
+        + latitude: 7.7 (number, optional) - Latitude
+
++ Response 204
+
++ Response 404 (application/json)
+    Return when user id is not found
+    
+    + Attributes (DefaultError404)
+        
++ Response 503 (application/json)
+    Return when server has internal error and can't continue fulfilling the request
+
+    + Attributes (DefaultError503)
+    
+### Get User Context By UID [GET /context/{uid}]
+Get User Context by user id (uid)
++ Response 200 (application/json)
+    + Attributes (UserContextModel)
+        + uid: 1000 (number)
+
++ Response 404 (application/json)
+    Return when user id is not found
+    
+    + Attributes (DefaultError404)
+        
++ Response 503 (application/json)
+    Return when server has internal error and can't continue fulfilling the request
+
+    + Attributes (DefaultError503)
+
+### Delete User Context By UID [DELETE /context/{uid}]
+Delete User Context by user id (uid)
++ Parameters
+    + uid: 123 (number) - User ID
+
++ Response 204
+
++ Response 404 (application/json)
+    Return when user id is not found
+    
+    + Attributes (DefaultError404)
+        
++ Response 503 (application/json)
+    Return when server has internal error and can't continue fulfilling the request
+
+    + Attributes (DefaultError503)
+
+### Update User Context [PATCH /context/]
+Update User Context and map it into user_context table
+
++ Request (application/json)
+    + Attributes
+        + uid: 123 (number, required) - Babe User ID.
+        + tzName: WIB (string, optional) - Time Zone Name
+        + tzOffset: 2900 (string, optional) - Time Zone Offset
+        + city: Jakarta (string, optional) - City
+        + country: Indonesia (string, optional) - Country
+        + longitude: 6.6 (number, optional) - Longitude
+        + latitude: 7.7 (number, optional) - Latitude
 
 + Response 204
 
@@ -1708,7 +1792,6 @@ See success response example, it’s already in the same order as mentioned abov
 + interest (array[UserInterestCategoryModel])
 
 ## UserContextModel (object)
-+ category: `Music` (string, required) - Name of the interest category
 + longitude: `6.6` (number, optional) - Longitude
 + latitude: `7.7` (number, optional) - Latitude
 + city: `Jakarta` (string, optional) - City
