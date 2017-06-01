@@ -299,6 +299,8 @@ Refer to table below of supported user's dimension
 | **location**         | Flatten         | hometown (String)                 |
 |                      |                 | country (String)                  |
 |                      |                 | city (String)                     |
+| **exclusion**        | Single Object   | catIds (Array of Object)          |
+|                      |                 | srcIds (Array of Object)          |
 
 + Parameters
     + uid: 123 (number) - User ID
@@ -362,6 +364,25 @@ Refer to table below of supported user's dimension
     Return when server has internal error and can't continue fulfilling the request
 
     + Attributes (DefaultError503)
+    
+### Create Common User [POST /create/{uid}]
+
+Create Commonuser based on given UID.
+
+If UID not found in database, it will create new commonuser. 
+
+Otherwise return HTTP 302 with no content.
+
++ Parameters
+    + uid: 123 (number, required) - User ID
+    
++ Response 204
+
++ Response 302 (application/json)
+    Return when parameters UID found in database
+    
+    + Attributes 
+
 
 ### Update Basic User Information [PATCH]
 
@@ -485,6 +506,8 @@ Refer to table below of supported user's dimension
 | **location**         | Flatten         | hometown (String)                 |
 |                      |                 | country (String)                  |
 |                      |                 | city (String)                     |
+| **exclusion**        | Single Object   | catIds (Array of Object)          |
+|                      |                 | srcIds (Array of Object)          |
 
 + Parameters
     + babeToken: TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ (string) - Babe Generated Token
@@ -642,6 +665,8 @@ Refer to table below of supported user's dimension
 | **location**         | Flatten         | hometown (String)                 |
 |                      |                 | country (String)                  |
 |                      |                 | city (String)                     |
+| **exclusion**        | Single Object   | catIds (Array of Object)          |
+|                      |                 | srcIds (Array of Object)          |
     
 + Request (application/json)
     + Attributes
@@ -1038,6 +1063,62 @@ Get the user’s prefered categories by ICU.
 
     + Attributes (DefaultError503)
     
+### Get User Categories by ICU & Category Type [GET /mcat/{uid}/{icu}/{type}]
+
+Get the user’s prefered categories by ICU & Category Type.
+
+Category Type : 
++ 1 = Article
++ 2 = Video
+ 
++ Parameters
+    + uid: 123 (number, required) - User ID
+    + icu: `id-id` (string, required) - locale ID
+    + type: 1 (string, required) - Category Type
+
++ Response 200 (application/json)
+    + Attributes (array[number])
+
+    + Body
+            
+            {
+             "categories": [
+               {
+                    "id" : 46
+                    "types" : [
+                        1,2
+                    ]
+                },
+               {
+                    "id" : 6
+                    "types" : [
+                        1
+                    ]
+                },
+                {
+                    "id" : 12
+                    "types" : [
+                        2
+                    ]
+                },
+             ]
+            }
+
++ Response 400 (application/json)
+    Return when parameters requirement not met correctly
+    
+    + Attributes (DefaultError400)
+    
++ Response 404 (application/json)
+    Return when user id or ICU is not found
+    
+    + Attributes (DefaultError404)
+        
++ Response 503 (application/json)
+    Return when server has internal error and can't continue fulfilling the request
+
+    + Attributes (DefaultError503)
+    
 ### Update User Categories by ICU [PUT /cat/{uid}/{icu}/{type}]
 
 Update user’s category list, by removing all old relationships and add all new categories based on icu and category type, 
@@ -1382,6 +1463,39 @@ Update user’s hometown location.
         + uid: 123 (number, required) - Babe User ID.
         + hometown: Bandung (string, required) - Hometown name.
        
++ Response 204
+
++ Response 404 (application/json)
+    Return when user id is not found
+    
+    + Attributes (DefaultError404)
+        
++ Response 503 (application/json)
+    Return when server has internal error and can't continue fulfilling the request
+
+    + Attributes (DefaultError503)
+
+## User Context [/context]
+
+### Update User Context [POST /context/upd/]
+
+Update User Context
++ Request (application/json)
+    + Attributes
+        + uid: 123 (number, required) - Babe User ID.
+        + tzName: WIB (string, optional) - Time Zone Name
+        + tzOffset: 2900 (string, optional) - Time Zone Offset
+        + city: Jakarta (string, optional) - City
+        + country: Indonesia (string, optional) - Country
+        + ip: 10.2.15.3 (string, optional) = IP of device
+        + longitude: 6.6 (number, optional) - Longitude
+        + latitude: 7.7 (number, optional) - Latitude
+        + appVersionCode: 1 (number, optional) - Application Version Code
+        + appVersion: babe (string, optional) - Application Version
+        + osApi: 1 (number, optional) - OS API version, eg 26 for Android 8.0
+        + osVersion: Jelly Beans (string, optional) - OS version, e.g.  "8.0"
+        + deviceType: ios (string, required) - ios or android
+
 + Response 204
 
 + Response 404 (application/json)
